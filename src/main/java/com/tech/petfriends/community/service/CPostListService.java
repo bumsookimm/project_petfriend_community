@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.dto.CDto;
@@ -15,7 +14,7 @@ import com.tech.petfriends.community.mapper.IDao;
 import com.tech.petfriends.login.dto.MemberLoginDto;
 
 
-@Service
+
 public class CPostListService implements CServiceInterface{
 	
 	private IDao iDao;
@@ -75,8 +74,16 @@ public class CPostListService implements CServiceInterface{
 	  
 
         
-        ArrayList<CDto> getHotTopicList = iDao.getHotTopicList();
-        model.addAttribute("getHotTopicList",getHotTopicList);
+		    ArrayList<CDto> getHotTopicList = iDao.getHotTopicList();
+		    
+		    for (CDto hottopic : getHotTopicList) {
+		        if (hottopic.getChrepfile() == null || hottopic.getChrepfile().isEmpty()) {
+		            hottopic.setChrepfile("noPetImg.jpg");
+		        }
+		    }
+	
+		    model.addAttribute("getHotTopicList", getHotTopicList);
+		
         		
        
         if(loginUser != null) {

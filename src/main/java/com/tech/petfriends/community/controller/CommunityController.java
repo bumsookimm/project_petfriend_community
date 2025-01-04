@@ -59,7 +59,7 @@ public class CommunityController {
 	private IDao iDao;
 
 	
-	 @Autowired
+	
 	private CServiceInterface serviceInterface;
 
 	// 커뮤니티 페이지로 이동
