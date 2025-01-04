@@ -38,29 +38,15 @@
 				<h3>펫프렌즈 핫이슈!</h3>
 				<hr>
 				<ul>
-					<c:forEach var="hottopic" items="${getHotTopicList}"
-						varStatus="status">
-						<c:if test="${status.index < 4}">
-							<!-- 최대 4개까지만 출력 -->
-							<li><a
-								href="/community/contentView?board_no=${hottopic.board_no}">
-									<div class="image-container">
-										<c:choose>
-											<c:when test="${not empty hottopic.chrepfile}">
-												<img
-													src="/static/images/community_img/${hottopic.chrepfile}"
-													alt="핫토픽 이미지" />
-											</c:when>
-											<c:otherwise>
-												<img src="/static/Images/pet/noPetImg.jpg" alt="기본 이미지" />
-											</c:otherwise>
-										</c:choose>
-										<div class="overlay">
-											<p>${hottopic.board_title}</p>
-										</div>
-									</div>
-							</a></li>
-						</c:if>
+					<c:forEach var="hottopic" items="${getHotTopicList}">
+					    <li><a href="/community/contentView?board_no=${hottopic.board_no}">
+					        <div class="image-container">
+					            <img src="/static/images/community_img/${hottopic.chrepfile}" alt="핫토픽 이미지" />
+					            <div class="overlay">
+					                <p>${hottopic.board_title}</p>
+					            </div>
+					        </div>
+					    </a></li>
 					</c:forEach>
 				</ul>
 			</section>
