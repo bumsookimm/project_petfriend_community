@@ -52,10 +52,6 @@
 			</section>
 
 
-
-
-
-
 			<!-- 펫프렌즈는 지금 뭐할까? -->
 			<div class="container-box">
 				<div class="container-header">
