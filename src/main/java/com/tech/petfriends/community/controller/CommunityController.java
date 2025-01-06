@@ -1,7 +1,6 @@
 package com.tech.petfriends.community.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +9,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.websocket.OnMessage;
-import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +43,7 @@ import com.tech.petfriends.community.service.CNeighborListService;
 import com.tech.petfriends.community.service.CPostListService;
 import com.tech.petfriends.community.service.CReportService;
 import com.tech.petfriends.community.service.CServiceInterface;
+import com.tech.petfriends.community.service.CStoryListService;
 import com.tech.petfriends.community.service.CUpdateLikeService;
 import com.tech.petfriends.community.service.CWriteService;
 import com.tech.petfriends.community.service.CWriteViewService;
@@ -73,10 +71,14 @@ public class CommunityController {
 		serviceInterface = new CPostListService(iDao);
 		serviceInterface.execute(model);
 
+		serviceInterface = new CStoryListService(iDao);
+		serviceInterface.execute(model);
+	
 		return "/community/main";
 	}
 
-		
+
+	
 	@GetMapping("/writeView")
 	public String writeView(HttpSession session, HttpServletRequest request, Model model) {
 		model.addAttribute("session", session);

@@ -84,16 +84,7 @@ public class CPostListService implements CServiceInterface{
 	
 		    model.addAttribute("getHotTopicList", getHotTopicList);
 		
-        		
-       
-        if(loginUser != null) {
-        	 String mem_nick = loginUser.getMem_nick();
-    	
-    		
-             ArrayList<CDto> storyList = iDao.storyList(mem_nick);
-             model.addAttribute("storyList",storyList);
-    		}
-        
+
   
 	
 	} 
