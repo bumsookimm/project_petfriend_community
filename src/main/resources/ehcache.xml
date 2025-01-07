@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://ehcache.org/ehcache.xsd http://ehcache.org/schema/ehcache/ehcache.xsd"
+         xmlns="http://ehcache.org/ehcache">
+  
+  <!-- 캐시 정의 -->
+  <cache name="storyCache"
+         maxEntriesLocalHeap="1000"
+         eternal="false"
+         timeToLiveSeconds="600"
+         timeToIdleSeconds="1800">
+    <persistence strategy="none" />
+  </cache>
+
+</ehcache>

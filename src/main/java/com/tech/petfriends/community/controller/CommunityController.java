@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,8 +56,9 @@ public class CommunityController {
 
 	@Autowired
 	private IDao iDao;
-
 	
+	@Autowired
+	private CacheManager cacheManager;
 	
 	private CServiceInterface serviceInterface;
 
@@ -71,7 +73,7 @@ public class CommunityController {
 		serviceInterface = new CPostListService(iDao);
 		serviceInterface.execute(model);
 
-		serviceInterface = new CStoryListService(iDao);
+		serviceInterface = new CStoryListService(iDao, cacheManager);
 		serviceInterface.execute(model);
 	
 		return "/community/main";
