@@ -1,10 +1,12 @@
 package com.tech.petfriends.community.service;
 
+import org.springframework.stereotype.Service;
+
 import com.tech.petfriends.community.dto.CChatDto;
 import com.tech.petfriends.community.mapper.IDao;
 
 
-
+@Service
 public class CChatService {
    
 	private IDao iDao;

@@ -10,10 +10,11 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.mapper.IDao;
-
+@Service
 public class CDownloadService implements CServiceInterface{
 
 	private IDao iDao;

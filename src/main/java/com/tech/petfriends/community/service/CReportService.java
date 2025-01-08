@@ -1,14 +1,10 @@
 package com.tech.petfriends.community.service;
 
-import java.util.Map;
-
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.mapper.IDao;
-
+@Service
 public class CReportService implements CServiceInterface {
 	
 	private IDao iDao;
