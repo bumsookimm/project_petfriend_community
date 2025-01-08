@@ -14,7 +14,7 @@ import com.tech.petfriends.community.dto.CDto;
 import com.tech.petfriends.community.mapper.IDao;
 import com.tech.petfriends.login.dto.MemberLoginDto;
 
-
+@Service
 public class CWriteViewService implements CServiceInterface {
 	private IDao iDao;
 	

@@ -6,12 +6,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.dto.CDto;
 import com.tech.petfriends.community.mapper.IDao;
 import com.tech.petfriends.login.dto.MemberLoginDto;
 
+@Service
 public class CMyFeedService implements CServiceInterface {
 
 	private IDao iDao;

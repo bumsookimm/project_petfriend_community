@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.dto.CDto;
@@ -14,36 +15,36 @@ import com.tech.petfriends.community.mapper.IDao;
 import com.tech.petfriends.login.dto.MemberLoginDto;
 
 
-
-public class CPostListService implements CServiceInterface{
-	
-	private IDao iDao;
-
-	public CPostListService(IDao iDao) {
-		this.iDao = iDao;
-	}
-
-	@Override
-	public void execute(Model model) {
-		Map<String, Object> m = model.asMap();
-		HttpServletRequest request = (HttpServletRequest) m.get("request");
-		HttpSession session = (HttpSession) m.get("session");
-	
+	@Service
+	public class CPostListService implements CServiceInterface{
 		
-		MemberLoginDto loginUser = (MemberLoginDto) session.getAttribute("loginUser");
-		if(loginUser != null) {
-		String mem_code = loginUser.getMem_code();
-		System.out.println("mem_code" + mem_code);
-		
-        CDto getpetimg = (CDto) iDao.getPetIMG(mem_code);
-        model.addAttribute("getpetimg",getpetimg);
+		private IDao iDao;
+	
+		public CPostListService(IDao iDao) {
+			this.iDao = iDao;
 		}
-
-	    int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-	    int limit = 5;  // 페이지당 게시글 수
-	    int offset = (page - 1) * limit;
-	    System.out.println("page: "+ page);
-	    
+	
+		@Override
+		public void execute(Model model) {
+			Map<String, Object> m = model.asMap();
+			HttpServletRequest request = (HttpServletRequest) m.get("request");
+			HttpSession session = (HttpSession) m.get("session");
+		
+			
+			MemberLoginDto loginUser = (MemberLoginDto) session.getAttribute("loginUser");
+			if(loginUser != null) {
+			String mem_code = loginUser.getMem_code();
+			System.out.println("mem_code" + mem_code);
+			
+	        CDto getpetimg = (CDto) iDao.getPetIMG(mem_code);
+	        model.addAttribute("getpetimg",getpetimg);
+			}
+	
+		    int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+		    int limit = 5;  // 페이지당 게시글 수
+		    int offset = (page - 1) * limit;
+		    System.out.println("page: "+ page);
+		    
 		// 검색어 처리
         String query = request.getParameter("query");
 		if (query != null && !query.isEmpty()) {

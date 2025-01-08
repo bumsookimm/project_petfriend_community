@@ -1,4 +1,4 @@
-package com.tech.petfriends.community.controller;
+package com.tech.petfriends.community.service;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,16 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,104 +27,99 @@ import com.tech.petfriends.community.dto.CChatDto;
 import com.tech.petfriends.community.dto.CCommunityFriendDto;
 import com.tech.petfriends.community.dto.CDto;
 import com.tech.petfriends.community.dto.CReportDto;
-import com.tech.petfriends.community.mapper.IDao;
-import com.tech.petfriends.community.service.CChatService;
-import com.tech.petfriends.community.service.CCommentReplyService;
-import com.tech.petfriends.community.service.CCommentService;
-import com.tech.petfriends.community.service.CCommunityServiceGroup;
-import com.tech.petfriends.community.service.CContentViewService;
-import com.tech.petfriends.community.service.CDeleteService;
-import com.tech.petfriends.community.service.CDownloadService;
-import com.tech.petfriends.community.service.CFriendService;
-import com.tech.petfriends.community.service.CModifyService;
-import com.tech.petfriends.community.service.CMyFeedService;
-import com.tech.petfriends.community.service.CMyNeighborListService;
-import com.tech.petfriends.community.service.CNeighborListService;
-import com.tech.petfriends.community.service.CPostListService;
-import com.tech.petfriends.community.service.CReportService;
-import com.tech.petfriends.community.service.CServiceInterface;
-import com.tech.petfriends.community.service.CStoryListService;
-import com.tech.petfriends.community.service.CUpdateLikeService;
-import com.tech.petfriends.community.service.CWriteService;
-import com.tech.petfriends.community.service.CWriteViewService;
-import com.tech.petfriends.community.service.ChatWebSocketHandler;
 import com.tech.petfriends.login.dto.MemberLoginDto;
 
 import lombok.RequiredArgsConstructor;
 
-@Controller
-@RequestMapping("/community")
+@Service
 @RequiredArgsConstructor
-public class CommunityController {
+public class CCommunityServiceGroup {
+
+	private final CChatService cChatService;
+	private final CCommentReplyService cCommentReplyService;
+	private final CCommentService cCommentService;
+	private final CContentViewService cContentViewService;
+	private final CDeleteService cDeleteService;
+	private final CDownloadService cDownloadService;
+	private final CFriendService cFriendService;
+	private final CModifyService cModifyService;
+	private final CMyFeedService cMyFeedService;
+	private final CMyNeighborListService cMyNeighborListService;
+	private final CNeighborListService cNeighborListService;
+	private final CPostListService cPostListService;
+	private final CReportService cReportService;
+	private final CStoryListService cStoryListService;
+	private final CUpdateLikeService cUpdateLikeService;
+	private final CWriteService cWriteService;
+	private final CWriteViewService cWriteViewService;      
 
 	
-	private final IDao iDao;
-
-	private final CCommunityServiceGroup cCommunityServiceGroup;
 	
-	private CServiceInterface serviceInterface;
-
-	
-	// 커뮤니티 페이지로 이동
-	@GetMapping("/main")
-	public String communityMain(HttpSession session, HttpServletRequest request, Model model) {		
+	public void loadCommunityMain(HttpSession session, HttpServletRequest request, Model model) {		
+		model.addAttribute("session", session);
+		model.addAttribute("request", request);
 		
-		cCommunityServiceGroup.loadCommunityMain(session, request, model);	
-		return "/community/main";
+		cPostListService.execute(model);
+		cStoryListService.execute(model);
+	}
+	
+	
+	
+	
+	public void loadwriteView(HttpSession session, HttpServletRequest request, Model model) {
+		model.addAttribute("session", session);
+		model.addAttribute("request", request);
+
+		cWriteViewService.execute(model);
+		
+	
+	}
+
+
+
+	public void loadcommunityWrite(MultipartHttpServletRequest mtfRequest, Model model) {
+		
+		model.addAttribute("request", mtfRequest);
+		model.addAttribute("msg", "게시글이 작성됐습니다.");
+		model.addAttribute("url", "/community/main");
+		
+		cWriteService.execute(model);
+		
+
 	}
 
 	
-	@GetMapping("/writeView")
-	public String writeView(HttpSession session, HttpServletRequest request, Model model) {
+	public void loadDownload(HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 
-		cCommunityServiceGroup.loadwriteView(session, request, model);	
-		return "/community/writeView";
+		model.addAttribute("request", request);
+		model.addAttribute("response", response);
+	
+		cDownloadService.execute(model);
+
+
+	}
+
+
+	public void loadContentView(HttpSession session, HttpServletRequest request, Model model) {
+		
+		model.addAttribute("request", request);
+		model.addAttribute("session", session);
+	
+		cContentViewService.execute(model);
+
+	
+	}
+
+
+
+	public void loadModify(MultipartHttpServletRequest mtfRequest, Model model) {
+		model.addAttribute("request", mtfRequest);
+	
+		cModifyService.execute(model);	
+
 	}
 
 	
-	@PostMapping("/write")
-	public String communityWrite(MultipartHttpServletRequest mtfRequest, Model model) {
-
-		cCommunityServiceGroup.loadcommunityWrite(mtfRequest, model);
-		return "/community/alert";
-
-	}
-
-	@GetMapping("/download")
-	public String download(HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
-
-		cCommunityServiceGroup.loadDownload(request, model, response);
-		String bid = request.getParameter("bid");
-		return "contentView?bid=" + bid;
-	}
-
-	@GetMapping("/contentView")
-	public String contentView(HttpSession session, HttpServletRequest request, Model model) {
-
-		cCommunityServiceGroup.loadContentView(session, request, model);
-		return "/community/contentView";
-
-	}
-
-	@GetMapping("/getPostsByCategory")
-	public String getPostsByCategory(@RequestParam("b_cate_no") int bCateNo, Model model) {
-		
-		List<CDto> postList = iDao.getPostsByCategory(bCateNo);
-		model.addAttribute("postList", postList); 
-	
-		return "community/postList"; // 부분 뷰 리턴
-	}
-
-	@PostMapping("/modify")
-	public String modify(MultipartHttpServletRequest mtfRequest, Model model) {
-		
-		model.addAttribute("request", mtfRequest);	
-		cCommunityServiceGroup.loadModify(mtfRequest, model);
-		
-		return "redirect:/community/contentView?board_no=" + mtfRequest.getParameter("board_no");
-
-	}
-
 	@GetMapping("/modifyView")
 	public String modifyView(@RequestParam("board_no") String board_no, Model model) {
 		CDto content = iDao.contentView(board_no); // 게시글 정보를 가져옴
@@ -435,9 +427,7 @@ public class CommunityController {
         List<CChatDto> getChatRooms = iDao.getChatRooms(sender);
         return getChatRooms;
     }
-    
-    
-    
-    
-
+	
+	
+	
 }

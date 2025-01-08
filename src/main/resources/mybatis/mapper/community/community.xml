@@ -56,10 +56,9 @@
 
 	<insert id="imgWrite">
 		INSERT INTO RE_CBOARD_IMAGE(REBNO, BOARD_NO,
-		CORGFILE, CCHGFILE, OREPFILE, CHREPFILE) VALUES
+		OREPFILE, CHREPFILE) VALUES
 		(RE_CBOARD_IMAGE_SEQ.NEXTVAL,
-		#{board_no}, #{originalFile},
-		#{changeFile}, #{repImgOriginal}, #{repImgChange})
+		#{board_no}, #{repImgOriginal}, #{repImgChange})
 	</insert>
 
 	<select id="contentView"
