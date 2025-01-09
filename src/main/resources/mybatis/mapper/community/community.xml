@@ -115,11 +115,8 @@
 
 	<update id="modifyImg">
 		UPDATE RE_CBOARD_IMAGE
-		SET CORGFILE = #{originalFile},
-		CCHGFILE = #{changeFile},
-		OREPFILE = #{repImgOriginal},
-		CHREPFILE =
-		#{repImgChange}
+		SET OREPFILE = #{repImgOriginal},
+		CHREPFILE = #{repImgChange}
 		WHERE BOARD_NO = #{board_no}
 	</update>
 

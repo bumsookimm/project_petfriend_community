@@ -2,15 +2,15 @@ package com.tech.petfriends.community.service;
 
 import java.util.Map;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.mapper.IDao;
+import com.tech.petfriends.community.service.interfaces.CServiceMInterface;
 @Service
-public class CDeleteService implements CServiceInterface {
+public class CDeleteService implements CServiceMInterface {
 	
 	private IDao iDao;
 	

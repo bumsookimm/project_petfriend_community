@@ -10,8 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tech.petfriends.community.mapper.IDao;
+import com.tech.petfriends.community.service.interfaces.CServiceMInterface;
 @Service
-public class CModifyService implements CServiceInterface {
+public class CModifyService implements CServiceMInterface {
 
     private IDao iDao;
 

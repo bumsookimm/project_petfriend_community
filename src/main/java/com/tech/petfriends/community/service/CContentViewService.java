@@ -12,10 +12,11 @@ import org.springframework.ui.Model;
 import com.tech.petfriends.community.dto.CCommentDto;
 import com.tech.petfriends.community.dto.CDto;
 import com.tech.petfriends.community.mapper.IDao;
+import com.tech.petfriends.community.service.interfaces.CServiceMInterface;
 import com.tech.petfriends.login.dto.MemberLoginDto;
 
 @Service
-public class CContentViewService implements CServiceInterface{
+public class CContentViewService implements CServiceMInterface{
 
 	private IDao iDao;
 	

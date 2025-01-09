@@ -3,7 +3,6 @@ package com.tech.petfriends.community.service;
 import java.util.ArrayList;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
@@ -11,9 +10,10 @@ import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.dto.CCommunityFriendDto;
 import com.tech.petfriends.community.mapper.IDao;
+import com.tech.petfriends.community.service.interfaces.CServiceMInterface;
 import com.tech.petfriends.login.dto.MemberLoginDto;
 @Service
-public class CMyNeighborListService implements CServiceInterface {
+public class CMyNeighborListService implements CServiceMInterface {
 
 	private IDao iDao;
 
@@ -24,7 +24,6 @@ public class CMyNeighborListService implements CServiceInterface {
 	@Override
 	public void execute(Model model) {
 		Map<String, Object> m = model.asMap();
-		HttpServletRequest request = (HttpServletRequest) m.get("request");
 		HttpSession session = (HttpSession) m.get("session");
 
 		MemberLoginDto loginUser = (MemberLoginDto) session.getAttribute("loginUser");
