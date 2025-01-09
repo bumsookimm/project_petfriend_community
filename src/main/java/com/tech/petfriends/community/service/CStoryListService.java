@@ -9,11 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.dto.CDto;
-	import com.tech.petfriends.community.mapper.IDao;
-	import com.tech.petfriends.login.dto.MemberLoginDto;
+import com.tech.petfriends.community.mapper.IDao;
+import com.tech.petfriends.community.service.interfaces.CServiceMInterface;
+import com.tech.petfriends.login.dto.MemberLoginDto;
 	
 	@Service
-	public class CStoryListService implements CServiceInterface {
+	public class CStoryListService implements CServiceMInterface {
 	
 	    private IDao iDao;
 	   
