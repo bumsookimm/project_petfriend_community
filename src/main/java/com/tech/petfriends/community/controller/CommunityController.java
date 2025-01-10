@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 	private final CCommunityServiceGroup cCommunityServiceGroup;
 
-	// 커뮤니티 페이지로 이동
+
 	@GetMapping("/main")
 	public String communityMain(HttpSession session, HttpServletRequest request, Model model) {
 
