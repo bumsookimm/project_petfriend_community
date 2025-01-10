@@ -55,7 +55,7 @@ public class CCommunityServiceGroup {
 		model.addAttribute("request", request);
 
 		cPostListService.execute(model);
-		cStoryListService.execute(model);
+		cStoryListService.storyListExecute(model,session);
 	}
 
 	public void loadwriteView(HttpSession session, HttpServletRequest request, Model model) {
