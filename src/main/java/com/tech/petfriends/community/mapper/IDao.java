@@ -17,6 +17,8 @@ public interface IDao {
 	
 	public ArrayList<CDto> getPostList();
 	
+	public ArrayList<CDto> searchPosts(String query);
+	
 	public void write(String mem_nick, String mem_code, String board_title, String board_content, int b_cate_no, String board_content_input);
 	
 	public void imgWrite(int board_no, String originalFile, String changeFile,String repImgOriginal, String repImgChange);
@@ -92,8 +94,6 @@ public interface IDao {
 	public ArrayList<CCommunityFriendDto> getNeighborList(String mem_nick);
 
 	public ArrayList<CDto> storyList (String mem_nick);
-
-	public ArrayList<CDto> searchPosts(String query);
 	
 	public void commentActivity( String user_id, String related_user_id,String board_no,String content);
 
