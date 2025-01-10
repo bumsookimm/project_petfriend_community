@@ -11,14 +11,33 @@
 		LEFT JOIN RE_CBOARD_IMAGE RCI ON
 		CD.BOARD_NO = RCI.BOARD_NO
 		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE =
-		MP.MEM_CODE AND MP.PET_MAIN =
-		'Y'
+		MP.MEM_CODE AND MP.PET_MAIN = 'Y'
 		ORDER BY CD.BOARD_NO DESC
+		LIMIT
+		#{limit} OFFSET #{offset}
 	</select>
+
+
+
+	<!-- 제목, 내용, 작성자에서 검색 -->
+	<select id="searchPosts"
+		resultType="com.tech.petfriends.community.dto.CDto">
+		SELECT CD.*, RCI.*, COALESCE(MP.PET_IMG, 'noPetImg.jpg') AS PET_IMG
+		FROM COMMUNITY_BOARD CD
+		LEFT JOIN RE_CBOARD_IMAGE RCI ON CD.BOARD_NO = RCI.BOARD_NO
+		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE = MP.MEM_CODE AND MP.PET_MAIN = 'Y'
+		WHERE BOARD_TITLE LIKE '%' || #{query} || '%'
+		OR BOARD_CONTENT_INPUT LIKE '%' || #{query} || '%'
+		OR USER_ID LIKE '%' || #{query} || '%'
+		ORDER BY BOARD_CREATED DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
 
 	<!-- 전체 게시글 개수 조회 -->
 	<select id="getTotalPostCount" resultType="int">
-		SELECT COUNT(*) FROM COMMUNITY_BOARD
+		SELECT COUNT(*) FROM
+		COMMUNITY_BOARD
 	</select>
 
 	<select id="getPetIMG"
@@ -58,7 +77,8 @@
 		INSERT INTO RE_CBOARD_IMAGE(REBNO, BOARD_NO,
 		OREPFILE, CHREPFILE) VALUES
 		(RE_CBOARD_IMAGE_SEQ.NEXTVAL,
-		#{board_no}, #{repImgOriginal}, #{repImgChange})
+		#{board_no},
+		#{repImgOriginal}, #{repImgChange})
 	</insert>
 
 	<select id="contentView"
@@ -87,15 +107,20 @@
 
 
 	<select id="getPostsByCategory" parameterType="int"
-		resultType="com.tech.petfriends.community.dto.CDto"> SELECT CB.*,
-		RCI.CHREPFILE, NVL(MP.PET_IMG, 'NOPETIMG.JPG') AS PET_IMG FROM
+		resultType="com.tech.petfriends.community.dto.CDto">
+		SELECT CB.*,
+		RCI.CHREPFILE, NVL(MP.PET_IMG, 'NOPETIMG.JPG') AS PET_IMG
+		FROM
 		COMMUNITY_BOARD CB LEFT JOIN RE_CBOARD_IMAGE RCI ON CB.BOARD_NO =
 		RCI.BOARD_NO LEFT JOIN MEMBER_PET MP ON CB.MEM_CODE = MP.MEM_CODE AND
-		MP.PET_MAIN = 'Y' <if test="b_cate_no != 0">
+		MP.PET_MAIN = 'Y'
+		<if test="b_cate_no != 0">
 			WHERE CB.B_CATE_NO = #{b_cate_no}
 		</if>
 		<if test="b_cate_no == 0">
-		</if> ORDER BY CB.BOARD_NO DESC </select>
+		</if>
+		ORDER BY CB.BOARD_NO DESC
+	</select>
 
 
 	<select id="getAllPosts"
@@ -115,9 +140,11 @@
 
 	<update id="modifyImg">
 		UPDATE RE_CBOARD_IMAGE
-		SET OREPFILE = #{repImgOriginal},
+		SET OREPFILE =
+		#{repImgOriginal},
 		CHREPFILE = #{repImgChange}
-		WHERE BOARD_NO = #{board_no}
+		WHERE BOARD_NO =
+		#{board_no}
 	</update>
 
 
@@ -227,7 +254,8 @@
 		USER_ID = #{user_id},
 		COMMENT_CONTENT = '관리자에 의해 댓글이 삭제됐습니다.',
 		MEM_CODE = #{mem_code}
-		WHERE COMMENT_NO = #{comment_no}
+		WHERE
+		COMMENT_NO = #{comment_no}
 	</update>
 
 
@@ -277,12 +305,14 @@
 		RCI.CHREPFILE
 		FROM COMMUNITY_BOARD CB
 		LEFT JOIN RE_CBOARD_IMAGE RCI
-		ON CB.BOARD_NO = RCI.BOARD_NO
+		ON
+		CB.BOARD_NO = RCI.BOARD_NO
 		ORDER BY TOTAL_COUNT DESC
 		)
-		WHERE ROWNUM BETWEEN 1 AND 4
+		WHERE ROWNUM
+		BETWEEN 1 AND 4
 	</select>
-	
+
 	<insert id="addFeed">
 		INSERT INTO COMMUNITY_FEED (FEED_NO, MEM_CODE,
 		BOARD_NO, USER_ID)
@@ -353,7 +383,8 @@
 
 
 	<delete id="deleteFriend">
-		DELETE FROM COMMUNITY_FRIEND WHERE MEM_NICK = #{mem_nick}
+		DELETE FROM COMMUNITY_FRIEND WHERE MEM_NICK =
+		#{mem_nick}
 		AND FRIEND_MEM_NICK = #{friend_mem_nick}
 	</delete>
 
@@ -379,38 +410,27 @@
 		resultType="com.tech.petfriends.community.dto.CDto">
 		SELECT * FROM (
 		SELECT B.*,
-		NVL(P.PET_IMG, 'nopetimg.jpg') AS PET_IMG,
+		NVL(P.PET_IMG, 'nopetimg.jpg') AS
+		PET_IMG,
 		F.FRIEND_MEM_NICK,
-		ROW_NUMBER() OVER (PARTITION BY B.USER_ID ORDER BY B.BOARD_CREATED DESC)
+		ROW_NUMBER() OVER (PARTITION BY B.USER_ID
+		ORDER BY B.BOARD_CREATED DESC)
 		AS RN
 		FROM COMMUNITY_BOARD B
-		LEFT JOIN MEMBER_PET P ON B.MEM_CODE = P.MEM_CODE AND P.PET_MAIN = 'Y'
-		INNER JOIN COMMUNITY_FRIEND F ON B.USER_ID = F.FRIEND_MEM_NICK
-		WHERE B.BOARD_CREATED >= SYSDATE - INTERVAL '1' DAY
-		AND F.MEM_NICK = #{mem_nick}
+		LEFT JOIN
+		MEMBER_PET P ON B.MEM_CODE = P.MEM_CODE AND P.PET_MAIN = 'Y'
+		INNER JOIN
+		COMMUNITY_FRIEND F ON B.USER_ID = F.FRIEND_MEM_NICK
+		WHERE
+		B.BOARD_CREATED >= SYSDATE - INTERVAL '1' DAY
+		AND F.MEM_NICK =
+		#{mem_nick}
 		) STORY
 		WHERE STORY.RN = 1
 		ORDER BY story.BOARD_CREATED DESC
 	</select>
 
 
-	<!-- 제목, 내용, 작성자에서 검색 -->
-	<select id="searchPosts"
-		resultType="com.tech.petfriends.community.dto.CDto">
-		SELECT CD.*, RCI.*, COALESCE(MP.PET_IMG, 'noPetImg.jpg') AS
-		PET_IMG
-		FROM COMMUNITY_BOARD CD
-		LEFT JOIN RE_CBOARD_IMAGE RCI ON
-		CD.BOARD_NO = RCI.BOARD_NO
-		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE =
-		MP.MEM_CODE AND MP.PET_MAIN = 'Y'
-		WHERE BOARD_TITLE LIKE '%' ||
-		#{query} || '%'
-		OR BOARD_CONTENT_INPUT LIKE '%' || #{query} || '%'
-		OR
-		USER_ID LIKE '%' || #{query} || '%'
-		ORDER BY BOARD_CREATED DESC
-	</select>
 
 	<insert id="commentActivity">
 		INSERT INTO COMMUNITY_ACTIVITY(ACTIVITY_NO, USER_ID,
