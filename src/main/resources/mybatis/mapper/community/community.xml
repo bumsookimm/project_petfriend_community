@@ -11,10 +11,9 @@
 		LEFT JOIN RE_CBOARD_IMAGE RCI ON
 		CD.BOARD_NO = RCI.BOARD_NO
 		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE =
-		MP.MEM_CODE AND MP.PET_MAIN = 'Y'
+		MP.MEM_CODE AND MP.PET_MAIN =
+		'Y'
 		ORDER BY CD.BOARD_NO DESC
-		LIMIT
-		#{limit} OFFSET #{offset}
 	</select>
 
 
@@ -22,15 +21,19 @@
 	<!-- 제목, 내용, 작성자에서 검색 -->
 	<select id="searchPosts"
 		resultType="com.tech.petfriends.community.dto.CDto">
-		SELECT CD.*, RCI.*, COALESCE(MP.PET_IMG, 'noPetImg.jpg') AS PET_IMG
+		SELECT CD.*, RCI.*, COALESCE(MP.PET_IMG, 'noPetImg.jpg') AS
+		PET_IMG
 		FROM COMMUNITY_BOARD CD
-		LEFT JOIN RE_CBOARD_IMAGE RCI ON CD.BOARD_NO = RCI.BOARD_NO
-		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE = MP.MEM_CODE AND MP.PET_MAIN = 'Y'
-		WHERE BOARD_TITLE LIKE '%' || #{query} || '%'
+		LEFT JOIN RE_CBOARD_IMAGE RCI ON
+		CD.BOARD_NO = RCI.BOARD_NO
+		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE =
+		MP.MEM_CODE AND MP.PET_MAIN = 'Y'
+		WHERE BOARD_TITLE LIKE '%' ||
+		#{query} || '%'
 		OR BOARD_CONTENT_INPUT LIKE '%' || #{query} || '%'
-		OR USER_ID LIKE '%' || #{query} || '%'
+		OR
+		USER_ID LIKE '%' || #{query} || '%'
 		ORDER BY BOARD_CREATED DESC
-		LIMIT #{limit} OFFSET #{offset}
 	</select>
 
 
@@ -78,7 +81,7 @@
 		OREPFILE, CHREPFILE) VALUES
 		(RE_CBOARD_IMAGE_SEQ.NEXTVAL,
 		#{board_no},
-		#{repImgOriginal}, #{repImgChange})
+		#{originalFile}, #{changeFile})
 	</insert>
 
 	<select id="contentView"
