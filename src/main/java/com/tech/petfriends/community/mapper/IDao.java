@@ -21,7 +21,7 @@ public interface IDao {
 	
 	public void write(String mem_nick, String mem_code, String board_title, String board_content, int b_cate_no, String board_content_input);
 	
-	public void imgWrite(int board_no, String originalFile, String changeFile,String repImgOriginal, String repImgChange);
+	public void imgWrite(int board_no, String originalFile, String changeFile);
 
 	public CDto getPetIMG(String mem_code);
 	
@@ -44,6 +44,8 @@ public interface IDao {
 	public void delete(int board_no);
 	
 	public void deleteReports(int board_no);
+	
+	public List<CDto> selectImg(int board_no);
 	
 	public void deleteImages(int board_no);
 
