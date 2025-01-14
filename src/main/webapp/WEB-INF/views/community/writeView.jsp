@@ -11,7 +11,36 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
-
+	<script>
+	$(document).ready(function() {
+		 const mem_code = "${sessionScope.loginUser.mem_code}"; // JSP 표현식 사용
+	     console.log("mem_code:", mem_code);
+	    // 임시 저장 함수
+	    function saveDraft() {
+	        const board_title = $("#board_title").val();
+	        const board_content = CKEDITOR.instances.board_content.getData();
+	        console.log("board_title:", board_title);
+	        console.log("board_content:", board_content);
+	        
+	        
+	        $.post("/community/saveDraft", { mem_code, board_title, board_content });
+	    }
+	
+	    // 주기적으로 임시 저장
+	    setInterval(saveDraft, 5000);
+	
+	    // 페이지 로드 시 임시 저장 내용 불러오기
+	    $.get("/community/getDraft", { mem_code }, function(data) {
+	        if (data) {
+	            $("#board_title").val(data.board_title);
+	            // CKEditor에 내용 불러오기
+	            CKEDITOR.instances.board_content.setData(data.board_content);
+	        }
+	  		console.log(data)
+	    
+	    });
+	});
+	</script>
 
 
 
@@ -52,7 +81,7 @@
             </c:forEach>
         </select>
 	
-        
+     
         <label for="file" class="image-label">사진업로드</label>
         <input type="file" id="file" name="file" multiple>
 

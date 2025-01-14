@@ -26,8 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 	import com.tech.petfriends.community.dto.CDto;
 	import com.tech.petfriends.community.dto.CReportDto;
 	import com.tech.petfriends.community.service.CCommunityServiceGroup;
-	
-	import lombok.RequiredArgsConstructor;
+import com.tech.petfriends.community.service.CDraftService;
+
+import lombok.RequiredArgsConstructor;
 	
 	@Controller
 	@RequestMapping("/community")
@@ -37,6 +38,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 	private final CCommunityServiceGroup cCommunityServiceGroup;
 
+	
+	private final CDraftService draftService;
 
 	@GetMapping("/main")
 	public String communityMain(HttpSession session, HttpServletRequest request, Model model) {
@@ -56,10 +59,37 @@ import org.springframework.web.bind.annotation.PostMapping;
 	public String communityWrite(MultipartHttpServletRequest mtfRequest, Model model) {
 
 		cCommunityServiceGroup.loadcommunityWrite(mtfRequest, model);
+		
+		draftService.deleteDraft(mtfRequest.getParameter("mem_code"));
 		return "/community/alert";
 
 	}
 
+    @PostMapping("/saveDraft")
+    public ResponseEntity<Void> saveDraft(@RequestParam String mem_code,
+                                          @RequestParam String board_title,
+                                          @RequestParam String board_content) {
+    	
+    	System.out.println("mem_code:"+mem_code);
+    	System.out.println("board_title:"+board_title);
+    	System.out.println("board_content:"+board_content);
+    
+    	draftService.saveOrUpdateDraft(mem_code, board_title, board_content);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/getDraft")
+    public ResponseEntity<CDto> getDraft(@RequestParam String mem_code) {
+        CDto draft = draftService.getDraft(mem_code);
+       
+    	System.out.println("mem_code:"+mem_code);
+
+        
+        return ResponseEntity.ok(draft);
+    }
+	
+	
+	
 	@GetMapping("/download")
 	public String download(HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 

@@ -2,6 +2,7 @@ package com.tech.petfriends.community.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -124,6 +125,16 @@ public interface IDao {
 	public void myFeedImgWrite(String mem_code, String myfeed_img);
 	
 
+	public void saveDraft(String mem_code, String board_title, String board_content);
+   
+	public void updateDraft(String mem_code, String board_title, String board_content);
+ 
+	public CDto getDraft(String mem_code);
+   
+    void deleteDraft(String mem_code);
+	
+	
+	
 	
 }
 

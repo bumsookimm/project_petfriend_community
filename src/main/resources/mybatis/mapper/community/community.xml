@@ -84,6 +84,32 @@
 		#{originalFile}, #{changeFile})
 	</insert>
 
+
+	<insert id="saveDraft">
+		INSERT INTO COMMUNITY_DRAFT (DRAFT_NO, MEM_CODE, BOARD_TITLE, BOARD_CONTENT,
+		LAST_MODIFIED)
+		VALUES (COMMUNITY_DRAFT_SEQ.NEXTVAL, #{mem_code}, #{board_title},
+		#{board_content}, SYSDATE)
+	</insert>
+
+	<update id="updateDraft">
+		UPDATE COMMUNITY_DRAFT
+		SET BOARD_TITLE = #{board_title}, BOARD_CONTENT = #{board_content},
+		LAST_MODIFIED = SYSDATE
+		WHERE MEM_CODE = #{mem_code}
+	</update>
+
+	<select id="getDraft" resultType="com.tech.petfriends.community.dto.CDto">
+		SELECT MEM_CODE,BOARD_TITLE, BOARD_CONTENT
+		FROM COMMUNITY_DRAFT
+		WHERE MEM_CODE = #{mem_code}
+	</select>
+
+	<delete id="deleteDraft">
+		DELETE FROM COMMUNITY_DRAFT WHERE MEM_CODE = #{mem_code}
+	</delete>
+
+
 	<select id="contentView"
 		resultType="com.tech.petfriends.community.dto.CDto">
 		SELECT CD.*, RCI.*, COALESCE(MP.PET_IMG, 'noPetImg.jpg') AS
