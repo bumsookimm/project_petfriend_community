@@ -16,10 +16,32 @@
 		ORDER BY CD.BOARD_NO DESC
 	</select>
 
-    <!-- 전체 게시글 개수 조회 -->
-    <select id="getTotalPostCount" resultType="int">
-        SELECT COUNT(*) FROM COMMUNITY_BOARD
-    </select>
+
+
+	<!-- 제목, 내용, 작성자에서 검색 -->
+	<select id="searchPosts"
+		resultType="com.tech.petfriends.community.dto.CDto">
+		SELECT CD.*, RCI.*, COALESCE(MP.PET_IMG, 'noPetImg.jpg') AS
+		PET_IMG
+		FROM COMMUNITY_BOARD CD
+		LEFT JOIN RE_CBOARD_IMAGE RCI ON
+		CD.BOARD_NO = RCI.BOARD_NO
+		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE =
+		MP.MEM_CODE AND MP.PET_MAIN = 'Y'
+		WHERE BOARD_TITLE LIKE '%' ||
+		#{query} || '%'
+		OR BOARD_CONTENT_INPUT LIKE '%' || #{query} || '%'
+		OR
+		USER_ID LIKE '%' || #{query} || '%'
+		ORDER BY BOARD_CREATED DESC
+	</select>
+
+
+	<!-- 전체 게시글 개수 조회 -->
+	<select id="getTotalPostCount" resultType="int">
+		SELECT COUNT(*) FROM
+		COMMUNITY_BOARD
+	</select>
 
 	<select id="getPetIMG"
 		resultType="com.tech.petfriends.community.dto.CDto">
@@ -56,11 +78,37 @@
 
 	<insert id="imgWrite">
 		INSERT INTO RE_CBOARD_IMAGE(REBNO, BOARD_NO,
-		CORGFILE, CCHGFILE, OREPFILE, CHREPFILE) VALUES
+		OREPFILE, CHREPFILE) VALUES
 		(RE_CBOARD_IMAGE_SEQ.NEXTVAL,
-		#{board_no}, #{originalFile},
-		#{changeFile}, #{repImgOriginal}, #{repImgChange})
+		#{board_no},
+		#{originalFile}, #{changeFile})
 	</insert>
+
+
+	<insert id="saveDraft">
+		INSERT INTO COMMUNITY_DRAFT (DRAFT_NO, MEM_CODE, BOARD_TITLE, BOARD_CONTENT,
+		LAST_MODIFIED)
+		VALUES (COMMUNITY_DRAFT_SEQ.NEXTVAL, #{mem_code}, #{board_title},
+		#{board_content}, SYSDATE)
+	</insert>
+
+	<update id="updateDraft">
+		UPDATE COMMUNITY_DRAFT
+		SET BOARD_TITLE = #{board_title}, BOARD_CONTENT = #{board_content},
+		LAST_MODIFIED = SYSDATE
+		WHERE MEM_CODE = #{mem_code}
+	</update>
+
+	<select id="getDraft" resultType="com.tech.petfriends.community.dto.CDto">
+		SELECT MEM_CODE,BOARD_TITLE, BOARD_CONTENT
+		FROM COMMUNITY_DRAFT
+		WHERE MEM_CODE = #{mem_code}
+	</select>
+
+	<delete id="deleteDraft">
+		DELETE FROM COMMUNITY_DRAFT WHERE MEM_CODE = #{mem_code}
+	</delete>
+
 
 	<select id="contentView"
 		resultType="com.tech.petfriends.community.dto.CDto">
@@ -121,12 +169,11 @@
 
 	<update id="modifyImg">
 		UPDATE RE_CBOARD_IMAGE
-		SET CORGFILE = #{originalFile},
-		CCHGFILE = #{changeFile},
-		OREPFILE = #{repImgOriginal},
-		CHREPFILE =
-		#{repImgChange}
-		WHERE BOARD_NO = #{board_no}
+		SET OREPFILE =
+		#{repImgOriginal},
+		CHREPFILE = #{repImgChange}
+		WHERE BOARD_NO =
+		#{board_no}
 	</update>
 
 
@@ -232,14 +279,13 @@
 
 	<update id="managerReplyUpdate">
 		UPDATE COMMUNITY_COMMENT
-		SET 
-		    USER_ID = #{user_id}, 
-		    COMMENT_CONTENT = '관리자에 의해 댓글이 삭제됐습니다.', 
-		    MEM_CODE = #{mem_code}
-		WHERE COMMENT_NO = #{comment_no}
+		SET
+		USER_ID = #{user_id},
+		COMMENT_CONTENT = '관리자에 의해 댓글이 삭제됐습니다.',
+		MEM_CODE = #{mem_code}
+		WHERE
+		COMMENT_NO = #{comment_no}
 	</update>
-
-
 
 
 	<update id="stepInit">
@@ -280,15 +326,20 @@
 
 	<select id="getHotTopicList"
 		resultType="com.tech.petfriends.community.dto.CDto">
-		SELECT CB.BOARD_NO, CB.BOARD_TITLE ,
-		(CB.BOARD_LIKES +
-		CB.BOARD_COMMENT_COUNT) AS TOTAL_COUNT,
+		SELECT *
+		FROM (
+		SELECT CB.BOARD_NO,
+		CB.BOARD_TITLE,
+		(CB.BOARD_LIKES + CB.BOARD_COMMENT_COUNT) AS TOTAL_COUNT,
 		RCI.CHREPFILE
-		FROM
-		COMMUNITY_BOARD CB
-		LEFT JOIN RE_CBOARD_IMAGE RCI ON CB.BOARD_NO =
-		RCI.BOARD_NO
+		FROM COMMUNITY_BOARD CB
+		LEFT JOIN RE_CBOARD_IMAGE RCI
+		ON
+		CB.BOARD_NO = RCI.BOARD_NO
 		ORDER BY TOTAL_COUNT DESC
+		)
+		WHERE ROWNUM
+		BETWEEN 1 AND 4
 	</select>
 
 	<insert id="addFeed">
@@ -361,7 +412,8 @@
 
 
 	<delete id="deleteFriend">
-		DELETE FROM COMMUNITY_FRIEND WHERE MEM_NICK = #{mem_nick}
+		DELETE FROM COMMUNITY_FRIEND WHERE MEM_NICK =
+		#{mem_nick}
 		AND FRIEND_MEM_NICK = #{friend_mem_nick}
 	</delete>
 
@@ -387,37 +439,27 @@
 		resultType="com.tech.petfriends.community.dto.CDto">
 		SELECT * FROM (
 		SELECT B.*,
-		NVL(P.PET_IMG, 'nopetimg.jpg') AS PET_IMG,
+		NVL(P.PET_IMG, 'nopetimg.jpg') AS
+		PET_IMG,
 		F.FRIEND_MEM_NICK,
-		ROW_NUMBER() OVER (PARTITION BY B.USER_ID ORDER BY B.BOARD_CREATED DESC) AS rn
+		ROW_NUMBER() OVER (PARTITION BY B.USER_ID
+		ORDER BY B.BOARD_CREATED DESC)
+		AS RN
 		FROM COMMUNITY_BOARD B
-		LEFT JOIN MEMBER_PET P ON B.MEM_CODE = P.MEM_CODE AND P.PET_MAIN = 'Y'
-		INNER JOIN COMMUNITY_FRIEND F ON B.USER_ID = F.FRIEND_MEM_NICK
-		WHERE B.BOARD_CREATED >= SYSDATE - INTERVAL '1' DAY
-		AND F.MEM_NICK = #{mem_nick}
-		) story
-		WHERE story.rn = 1
+		LEFT JOIN
+		MEMBER_PET P ON B.MEM_CODE = P.MEM_CODE AND P.PET_MAIN = 'Y'
+		INNER JOIN
+		COMMUNITY_FRIEND F ON B.USER_ID = F.FRIEND_MEM_NICK
+		WHERE
+		B.BOARD_CREATED >= SYSDATE - INTERVAL '1' DAY
+		AND F.MEM_NICK =
+		#{mem_nick}
+		) STORY
+		WHERE STORY.RN = 1
 		ORDER BY story.BOARD_CREATED DESC
 	</select>
 
 
-	<!-- 제목, 내용, 작성자에서 검색 -->
-	<select id="searchPosts"
-		resultType="com.tech.petfriends.community.dto.CDto">
-		SELECT CD.*, RCI.*, COALESCE(MP.PET_IMG, 'noPetImg.jpg') AS
-		PET_IMG
-		FROM COMMUNITY_BOARD CD
-		LEFT JOIN RE_CBOARD_IMAGE RCI ON
-		CD.BOARD_NO = RCI.BOARD_NO
-		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE =
-		MP.MEM_CODE AND MP.PET_MAIN = 'Y'
-		WHERE BOARD_TITLE LIKE '%' ||
-		#{query} || '%'
-		OR BOARD_CONTENT_INPUT LIKE '%' || #{query} || '%'
-		OR
-		USER_ID LIKE '%' || #{query} || '%'
-		ORDER BY BOARD_CREATED DESC
-	</select>
 
 	<insert id="commentActivity">
 		INSERT INTO COMMUNITY_ACTIVITY(ACTIVITY_NO, USER_ID,
@@ -513,19 +555,19 @@
 	</select>
 
 
-	<update id="totalVisits" parameterType="String" >
+	<update id="totalVisits" parameterType="String">
 		UPDATE COMMUNITY_MYFEED
 		SET TOTAL_VISITS = TOTAL_VISITS + 1
 		WHERE MEM_CODE = #{mem_code}
 	</update>
 
-	
-	<update id="dailyVisits" parameterType="String" >
+
+	<update id="dailyVisits" parameterType="String">
 		UPDATE COMMUNITY_MYFEED
 		SET DAILY_VISITS = DAILY_VISITS + 1
 		WHERE MEM_CODE = #{mem_code}
 	</update>
-	
+
 	<select id="getMyfeedVisit"
 		resultType="com.tech.petfriends.community.dto.CDto">
 		SELECT *
@@ -535,11 +577,10 @@
 
 
 	<update id="myFeedImgWrite">
-	    UPDATE COMMUNITY_MYFEED
-	    SET MYFEED_IMG = #{myfeed_img}
-	    WHERE MEM_CODE = #{mem_code}
+		UPDATE COMMUNITY_MYFEED
+		SET MYFEED_IMG = #{myfeed_img}
+		WHERE MEM_CODE = #{mem_code}
 	</update>
-
 
 
 </mapper>

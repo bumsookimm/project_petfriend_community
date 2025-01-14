@@ -10,6 +10,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 public class ChatWebSocketHandler extends TextWebSocketHandler {
     private static Map<String, WebSocketSession> sessions = new HashMap<>();
     private CChatService cChatService; // 서비스 의존성 주입

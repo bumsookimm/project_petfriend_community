@@ -2,6 +2,7 @@ package com.tech.petfriends.community.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -17,9 +18,11 @@ public interface IDao {
 	
 	public ArrayList<CDto> getPostList();
 	
+	public ArrayList<CDto> searchPosts(String query);
+	
 	public void write(String mem_nick, String mem_code, String board_title, String board_content, int b_cate_no, String board_content_input);
 	
-	public void imgWrite(int board_no, String originalFile, String changeFile,String repImgOriginal, String repImgChange);
+	public void imgWrite(int board_no, String originalFile, String changeFile);
 
 	public CDto getPetIMG(String mem_code);
 	
@@ -42,6 +45,8 @@ public interface IDao {
 	public void delete(int board_no);
 	
 	public void deleteReports(int board_no);
+	
+	public List<CDto> selectImg(int board_no);
 	
 	public void deleteImages(int board_no);
 
@@ -92,8 +97,6 @@ public interface IDao {
 	public ArrayList<CCommunityFriendDto> getNeighborList(String mem_nick);
 
 	public ArrayList<CDto> storyList (String mem_nick);
-
-	public ArrayList<CDto> searchPosts(String query);
 	
 	public void commentActivity( String user_id, String related_user_id,String board_no,String content);
 
@@ -122,6 +125,16 @@ public interface IDao {
 	public void myFeedImgWrite(String mem_code, String myfeed_img);
 	
 
+	public void saveDraft(String mem_code, String board_title, String board_content);
+   
+	public void updateDraft(String mem_code, String board_title, String board_content);
+ 
+	public CDto getDraft(String mem_code);
+   
+    void deleteDraft(String mem_code);
+	
+	
+	
 	
 }
 

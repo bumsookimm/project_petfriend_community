@@ -1,20 +1,18 @@
 package com.tech.petfriends.community.service;
 
-import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tech.petfriends.community.mapper.IDao;
+import com.tech.petfriends.community.service.interfaces.CServiceMInterface;
 import com.tech.petfriends.login.dto.MemberLoginDto;
-
-public class CFriendService implements CServiceInterface {
+@Service
+public class CFriendService implements CServiceMInterface {
 
 	private IDao iDao;
 

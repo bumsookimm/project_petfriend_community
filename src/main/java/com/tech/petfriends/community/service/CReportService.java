@@ -1,40 +1,32 @@
 package com.tech.petfriends.community.service;
 
-import java.util.Map;
+import org.springframework.stereotype.Service;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.ui.Model;
-
+import com.tech.petfriends.community.dto.CReportDto;
 import com.tech.petfriends.community.mapper.IDao;
 
-public class CReportService implements CServiceInterface {
-	
+@Service
+public class CReportService {
+
 	private IDao iDao;
-	
+
 	public CReportService(IDao iDao) {
 		this.iDao = iDao;
 	}
-	
-	@Override
-	public void execute(Model model) {
-			
-		Integer board_no = (Integer) model.getAttribute("board_no");		
-		String reporter_id = (String) model.getAttribute("reporter_id");
-		String mem_code = (String) model.getAttribute("mem_code");
-		String reason = (String) model.getAttribute("reason");
-		Integer comment_no = (Integer) model.getAttribute("comment_no");
-		String report_type = (String) model.getAttribute("report_type");
-		
+
+	public void Reportexecute(CReportDto reportDto) {
+
+		Integer board_no = reportDto.getBoard_no();
+		String reporter_id = reportDto.getReporter_id();
+		String reason = reportDto.getReason();
+		Integer comment_no = reportDto.getComment_no();
+		String report_type = reportDto.getReport_type();
+		String mem_code = reportDto.getMem_code();
+
 		System.out.println("Received board_no: " + board_no);
-		
+
 		iDao.report(board_no, reporter_id, reason, comment_no, report_type, mem_code);
-	
-		
+
 	}
 
-	
-	
-	
 }

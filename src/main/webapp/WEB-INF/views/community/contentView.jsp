@@ -39,12 +39,6 @@
 	        }
 	    }
 
-/* 	    function initializeLikeButton() {
-	        <!--var isliked = "${isliked}"; // 서버에서 변환된 'isliked' 값-->
-	        var likeButton = document.getElementById("like-button");
-	        likeButton.innerHTML = isliked === 1 ? "❤️" : "🤍";
-	    }
- */
 	    function updateLike() {
 	        var isLoggedIn = "${sessionScope.loginUser != null ? 'true' : 'false'}";
 
@@ -74,7 +68,7 @@
 	        xhr.send(JSON.stringify({ mem_code: memCode, board_no: boardNo, mem_nick: memName, user_id :userId }));
 	    }
 
-	/*     window.onload = initializeLikeButton; */
+
 	    
 	    /////신고기능
 		 // 팝업 열기 함수
@@ -120,11 +114,6 @@
 		    const reporterId = "${sessionScope.loginUser.mem_nick}"; // 신고자 ID (로그인된 사용자 ID)
 		    const memCode = "${contentView.mem_code}"; // 신고자 ID (로그인된 사용자 ID)
 			
-		    console.log("Board No:", boardNo); // 디버깅을 위한 로그
-		    console.log("Reporter ID:", reporterId); // 디버깅을 위한 로그
-		    console.log("Comment NO:", currentCommentNo); // 디버깅을 위한 로그
-		    console.log("Report Type:", currentReportType); // 디버깅을 위한 로그
-		    console.log("mem_code:", memCode); // 디버깅을 위한 로그
 		    
 		    fetch('/community/report', {
 		        method: 'POST',
@@ -367,11 +356,11 @@
 									class="user-name">${commentReply.user_id}</span>:&nbsp;&nbsp; <span
 									class="commentReply-content preformatted-text">${fn:escapeXml(commentReply.comment_content)}</span>
 									<span class="commentReply-time">${commentReply.created_date}</span></a>
-								<button onclick="openReportPopup(${commentReply.comment_no}, '댓글')"
+								<button
+									onclick="openReportPopup(${commentReply.comment_no}, '댓글')"
 									class="report-comment-button">🚨 신고</button>
 								<div class="button-group">
-									<button
-										onclick="toggleReplyForm(${commentReply.comment_no})">답글</button>
+									<button onclick="toggleReplyForm(${commentReply.comment_no})">답글</button>
 
 									<!-- 대댓글 삭제 버튼: 현재 로그인한 사용자와 대댓글 작성자가 같을 경우만 보이기 -->
 									<c:if

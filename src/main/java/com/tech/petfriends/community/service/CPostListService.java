@@ -12,39 +12,40 @@ import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.dto.CDto;
 import com.tech.petfriends.community.mapper.IDao;
+import com.tech.petfriends.community.service.interfaces.CServiceMInterface;
 import com.tech.petfriends.login.dto.MemberLoginDto;
 
 
-@Service
-public class CPostListService implements CServiceInterface{
-	
-	private IDao iDao;
-
-	public CPostListService(IDao iDao) {
-		this.iDao = iDao;
-	}
-
-	@Override
-	public void execute(Model model) {
-		Map<String, Object> m = model.asMap();
-		HttpServletRequest request = (HttpServletRequest) m.get("request");
-		HttpSession session = (HttpSession) m.get("session");
-	
+	@Service
+	public class CPostListService implements CServiceMInterface{
 		
-		MemberLoginDto loginUser = (MemberLoginDto) session.getAttribute("loginUser");
-		if(loginUser != null) {
-		String mem_code = loginUser.getMem_code();
-		System.out.println("mem_code" + mem_code);
-		
-        CDto getpetimg = (CDto) iDao.getPetIMG(mem_code);
-        model.addAttribute("getpetimg",getpetimg);
+		private IDao iDao;
+	
+		public CPostListService(IDao iDao) {
+			this.iDao = iDao;
 		}
-
-	    int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-	    int limit = 5;  // 페이지당 게시글 수
-	    int offset = (page - 1) * limit;
-	    System.out.println("page: "+ page);
-	    
+	
+		@Override
+		public void execute(Model model) {
+			Map<String, Object> m = model.asMap();
+			HttpServletRequest request = (HttpServletRequest) m.get("request");
+			HttpSession session = (HttpSession) m.get("session");
+		
+			
+			MemberLoginDto loginUser = (MemberLoginDto) session.getAttribute("loginUser");
+			if(loginUser != null) {
+			String mem_code = loginUser.getMem_code();
+			System.out.println("mem_code" + mem_code);
+			
+	        CDto getpetimg = (CDto) iDao.getPetIMG(mem_code);
+	        model.addAttribute("getpetimg",getpetimg);
+			}
+	
+		    int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+		    int limit = 5;  // 페이지당 게시글 수
+		    int offset = (page - 1) * limit;
+		    System.out.println("page: "+ page);
+		    
 		// 검색어 처리
         String query = request.getParameter("query");
 		if (query != null && !query.isEmpty()) {
@@ -75,18 +76,17 @@ public class CPostListService implements CServiceInterface{
 	  
 
         
-        ArrayList<CDto> getHotTopicList = iDao.getHotTopicList();
-        model.addAttribute("getHotTopicList",getHotTopicList);
-        		
-       
-        if(loginUser != null) {
-        	 String mem_nick = loginUser.getMem_nick();
-    	
-    		
-             ArrayList<CDto> storyList = iDao.storyList(mem_nick);
-             model.addAttribute("storyList",storyList);
-    		}
-        
+		    ArrayList<CDto> getHotTopicList = iDao.getHotTopicList();
+		    
+		    for (CDto hottopic : getHotTopicList) {
+		        if (hottopic.getChrepfile() == null || hottopic.getChrepfile().isEmpty()) {
+		            hottopic.setChrepfile("noPetImg.jpg");
+		        }
+		    }
+	
+		    model.addAttribute("getHotTopicList", getHotTopicList);
+		
+
   
 	
 	} 

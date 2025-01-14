@@ -4,13 +4,15 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.tech.petfriends.community.mapper.IDao;
-
-public class CModifyService implements CServiceInterface {
+import com.tech.petfriends.community.service.interfaces.CServiceMInterface;
+@Service
+public class CModifyService implements CServiceMInterface {
 
     private IDao iDao;
 

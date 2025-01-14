@@ -30,7 +30,7 @@
 	<properties>
 		<java.version>11</java.version>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -86,15 +86,15 @@
 			<version>1.9.6</version>
 			<!-- <scope>runtime</scope> -->
 		</dependency>
-		
-		<!-- Tiles -->		
+
+		<!-- Tiles -->
 		<dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.tiles/tiles-jsp -->
-		    <groupId>org.apache.tiles</groupId>
-		    <artifactId>tiles-jsp</artifactId>
-		    <version>3.0.7</version>
+			<!-- https://mvnrepository.com/artifact/org.apache.tiles/tiles-jsp -->
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-jsp</artifactId>
+			<version>3.0.7</version>
 		</dependency>
-		
+
 		<!-- MockMvc -->
 		<dependency>
 			<!--
@@ -121,14 +121,14 @@
 			<artifactId>json</artifactId>
 			<version>20231013</version>
 		</dependency>
-		
-		 <!--비밀번호 암호화 (아르곤2)-->
+
+		<!--비밀번호 암호화 (아르곤2)-->
 		<dependency>
-    		<groupId>de.mkammerer</groupId>
-    		<artifactId>argon2-jvm</artifactId>
-    		<version>2.11</version>
+			<groupId>de.mkammerer</groupId>
+			<artifactId>argon2-jvm</artifactId>
+			<version>2.11</version>
 		</dependency>
-		
+
 		<!--SMS 인증 (coolsms)-->
 		<!-- https://mvnrepository.com/artifact/net.nurigo/javaSDK -->
 		<dependency>
@@ -136,26 +136,34 @@
 			<artifactId>sdk</artifactId>
 			<version>4.2.7</version>
 		</dependency>
-		 		
-		 			 		
-	  <!-- Spring Boot Web Starter: 웹소켓 기능을 포함하기 위해 Spring Web 의존성이 필요합니다 -->
-	    <dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-starter-web</artifactId>
-	    </dependency>
-	
-	    <!-- Spring WebSocket: 웹소켓을 통한 실시간 통신을 위한 의존성 -->
-	    <dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-starter-websocket</artifactId>
-	    </dependency>
-		 		
-		 <dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>		 		
-		 		
-		 			 
+
+
+		<!-- Spring Boot Web Starter: 웹소켓 기능을 포함하기 위해 Spring Web 의존성이 필요합니다 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Spring WebSocket: 웹소켓을 통한 실시간 통신을 위한 의존성 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		
+		<dependency>
+		    <groupId>org.jsoup</groupId>
+		    <artifactId>jsoup</artifactId>
+		    <version>1.14.3</version>
+		</dependency>
+
+
+
 	</dependencies>
 
 	<build>
