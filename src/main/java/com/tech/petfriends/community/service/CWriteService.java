@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
 		    String mem_code = mtfRequest.getParameter("mem_code");
 		    String board_title = mtfRequest.getParameter("board_title");
 		   
-		    String board_content =  "<script>alert('XSS 공격');</script>";
+		    String board_content = mtfRequest.getParameter("board_content");
 		    System.out.println("board content: " + board_content);
 		  
 		    String safeBoardContent = Jsoup.clean(board_content, Whitelist.basic()); // 기본 HTML 태그만 허용

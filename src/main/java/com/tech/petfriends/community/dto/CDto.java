@@ -1,7 +1,6 @@
 package com.tech.petfriends.community.dto;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
