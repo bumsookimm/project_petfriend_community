@@ -49,13 +49,14 @@ public class CCommunityServiceGroup {
 	private final CChatHistoryService cChatHistoryService;
 	private final CChatRoomService cChatRoomService;
 	private final CPostsByCatrgoryService cPostsByCatrgoryService;
+	private final CDraftService cDraftService;
 
 	public void loadCommunityMain(HttpSession session, HttpServletRequest request, Model model) {
 		model.addAttribute("session", session);
 		model.addAttribute("request", request);
 
 		cPostListService.execute(model);
-		cStoryListService.storyListExecute(model,session);
+		cStoryListService.storyListExecute(model, session);
 	}
 
 	public void loadwriteView(HttpSession session, HttpServletRequest request, Model model) {
@@ -73,7 +74,22 @@ public class CCommunityServiceGroup {
 		model.addAttribute("url", "/community/main");
 
 		cWriteService.execute(model);
+		cDraftService.deleteDraft(mtfRequest.getParameter("mem_code"));
 
+	}
+
+	public void loadsaveDraft(@RequestParam String mem_code, @RequestParam String board_title,
+			@RequestParam String board_content) {
+
+		cDraftService.saveOrUpdateDraft(mem_code, board_title, board_content);
+
+	}
+
+	public CDto loadgetDraft(@RequestParam String mem_code) {
+
+		CDto draft = cDraftService.getDraft(mem_code);
+
+		return draft;
 	}
 
 	public void loadDownload(HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
