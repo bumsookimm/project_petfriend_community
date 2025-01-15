@@ -37,8 +37,6 @@ public class CommunityController {
 
 	private final CCommunityServiceGroup cCommunityServiceGroup;
 
-	private final CDraftService draftService;
-
 	@GetMapping("/main")
 	public String communityMain(HttpSession session, HttpServletRequest request, Model model) {
 
@@ -74,8 +72,8 @@ public class CommunityController {
 	public ResponseEntity<CDto> getDraft(@RequestParam String mem_code) {
 
 		cCommunityServiceGroup.loadgetDraft(mem_code);
-		CDto draft = cCommunityServiceGroup.loadgetDraft(mem_code); 
-		return ResponseEntity.ok(draft); 
+		CDto draft = cCommunityServiceGroup.loadgetDraft(mem_code);
+		return ResponseEntity.ok(draft);
 	}
 
 	@GetMapping("/download")

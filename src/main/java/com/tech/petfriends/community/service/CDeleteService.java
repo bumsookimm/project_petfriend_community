@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.tech.petfriends.community.dto.CDto;
+import com.tech.petfriends.community.mapper.CommunityBoardRepository;
 import com.tech.petfriends.community.mapper.IDao;
 import com.tech.petfriends.community.service.interfaces.CServiceMInterface;
 
@@ -18,27 +20,36 @@ public class CDeleteService implements CServiceMInterface {
 
 	private IDao iDao;
 
-	public CDeleteService(IDao iDao) {
+	private CommunityBoardRepository communityBoardRepository;
+	
+	
+	public CDeleteService(IDao iDao, CommunityBoardRepository communityBoardRepository) {
 		this.iDao = iDao;
+		this.communityBoardRepository = communityBoardRepository;
 	}
 
+	
 	@Override
+	@Transactional
 	public void execute(Model model) {
 		Map<String, Object> m = model.asMap();
 		HttpServletRequest request = (HttpServletRequest) m.get("request");
-
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
 
-		iDao.deleteReports(board_no);
+		
+//		iDao.deleteReports(board_no);
+//		iDao.deleteLikes(board_no);
+//		iDao.deleteComments(board_no);
+//		deleteImages(board_no);
+//		iDao.delete(board_no);
 
-		iDao.deleteLikes(board_no);
-
-		iDao.deleteComments(board_no);
-
+		communityBoardRepository.deleteLikes(board_no);
+		communityBoardRepository.deleteComments(board_no);
+		communityBoardRepository.deleteReports(board_no);
 		deleteImages(board_no);
-
-		iDao.delete(board_no);
-
+		communityBoardRepository.deleteBoard(board_no);
+		
+	
 	}
 
 	private void deleteImages(int board_no) {
@@ -57,6 +68,6 @@ public class CDeleteService implements CServiceMInterface {
 	        }
 	    }
 	    // 데이터베이스에서 이미지 레코드 삭제
-	    iDao.deleteImages(board_no);
+	    communityBoardRepository.deleteImages(board_no);
 	}
 }
