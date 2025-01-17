@@ -38,12 +38,9 @@ public class CMyFeedService implements CServiceMInterface {
 			model.addAttribute("logingetpetimg", logingetpetimg);
 		}
 
-		// 이미 mem_code가 모델에 추가되어 있으므로 바로 가져올 수 있습니다.
+		
 		String mem_code = (String) model.getAttribute("mem_code");
 		model.addAttribute("mem_code", mem_code);
-
-		ArrayList<CDto> postList = iDao.getPostList(); // DAO 호출
-		model.addAttribute("postList", postList); // 모델에 게시글 리스트 추가
 
 		// mem_code를 기반으로 myFeedList 조회
 		ArrayList<CDto> myFeedList = iDao.myFeedList(mem_code); // mem_code를 인자로 넘기기

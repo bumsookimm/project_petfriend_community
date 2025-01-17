@@ -5,17 +5,14 @@
 
 	<select id="getPostList"
 		resultType="com.tech.petfriends.community.dto.CDto">
-		SELECT CD.*, RCI.*, COALESCE(MP.PET_IMG, 'noPetImg.jpg') AS
-		PET_IMG
+		SELECT CD.*, RCI.*, COALESCE(MP.PET_IMG, 'noPetImg.jpg') AS PET_IMG
 		FROM COMMUNITY_BOARD CD
-		LEFT JOIN RE_CBOARD_IMAGE RCI ON
-		CD.BOARD_NO = RCI.BOARD_NO
-		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE =
-		MP.MEM_CODE AND MP.PET_MAIN =
+		LEFT JOIN RE_CBOARD_IMAGE RCI ON CD.BOARD_NO = RCI.BOARD_NO
+		LEFT JOIN MEMBER_PET MP ON CD.MEM_CODE = MP.MEM_CODE AND MP.PET_MAIN =
 		'Y'
 		ORDER BY CD.BOARD_NO DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
 	</select>
-
 
 
 	<!-- 제목, 내용, 작성자에서 검색 -->
@@ -86,11 +83,13 @@
 
 
 	<insert id="saveDraft">
-		INSERT INTO COMMUNITY_DRAFT (DRAFT_NO, MEM_CODE, BOARD_TITLE, BOARD_CONTENT,
+		INSERT INTO COMMUNITY_DRAFT (DRAFT_NO, MEM_CODE, BOARD_TITLE,
+		BOARD_CONTENT,
 		LAST_MODIFIED)
 		VALUES (COMMUNITY_DRAFT_SEQ.NEXTVAL, #{mem_code}, #{board_title},
 		#{board_content}, SYSDATE)
 	</insert>
+
 
 	<update id="updateDraft">
 		UPDATE COMMUNITY_DRAFT
@@ -136,20 +135,15 @@
 
 
 	<select id="getPostsByCategory" parameterType="int"
-		resultType="com.tech.petfriends.community.dto.CDto">
-		SELECT CB.*,
-		RCI.CHREPFILE, NVL(MP.PET_IMG, 'NOPETIMG.JPG') AS PET_IMG
-		FROM
+		resultType="com.tech.petfriends.community.dto.CDto"> SELECT CB.*,
+		RCI.CHREPFILE, NVL(MP.PET_IMG, 'NOPETIMG.JPG') AS PET_IMG FROM
 		COMMUNITY_BOARD CB LEFT JOIN RE_CBOARD_IMAGE RCI ON CB.BOARD_NO =
 		RCI.BOARD_NO LEFT JOIN MEMBER_PET MP ON CB.MEM_CODE = MP.MEM_CODE AND
-		MP.PET_MAIN = 'Y'
-		<if test="b_cate_no != 0">
+		MP.PET_MAIN = 'Y' <if test="b_cate_no != 0">
 			WHERE CB.B_CATE_NO = #{b_cate_no}
 		</if>
 		<if test="b_cate_no == 0">
-		</if>
-		ORDER BY CB.BOARD_NO DESC
-	</select>
+		</if> ORDER BY CB.BOARD_NO DESC </select>
 
 
 	<select id="getAllPosts"
@@ -458,7 +452,6 @@
 		WHERE STORY.RN = 1
 		ORDER BY story.BOARD_CREATED DESC
 	</select>
-
 
 
 	<insert id="commentActivity">
