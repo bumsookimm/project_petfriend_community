@@ -15,9 +15,9 @@ import com.tech.petfriends.community.dto.CDto;
 @Mapper
 public interface IDao {
 
-	public ArrayList<CDto> getPostList();
+	public ArrayList<CDto> getPostList(int offset, int limit);
 
-	public ArrayList<CDto> searchPosts(String query);
+	public ArrayList<CDto> searchPosts(String query, int offset, int limit);
 
 	public void write(String mem_nick, String mem_code, String board_title, String board_content, int b_cate_no,
 			String board_content_input);
