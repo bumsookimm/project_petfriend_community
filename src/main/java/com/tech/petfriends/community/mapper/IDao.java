@@ -133,5 +133,7 @@ public interface IDao {
 	public CDto getDraft(String mem_code);
 
 	public void deleteDraft(String mem_code);
+	
+	public void resetDailyVisits();
 
 }
