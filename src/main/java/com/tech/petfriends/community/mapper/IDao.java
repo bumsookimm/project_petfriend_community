@@ -116,6 +116,10 @@ public interface IDao {
 
 	public List<CChatDto> getChatRooms(String sender);
 
+	public void insertChatRoom(String sender, String receiver, String room_id);
+	
+	public boolean isRoomExist(String roomId);
+	
 	public int getTotalPostCount(); // 전체 게시글 개수
 
 	public void totalVisits(String mem_code);

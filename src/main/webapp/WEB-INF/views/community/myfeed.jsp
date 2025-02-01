@@ -49,7 +49,7 @@
 
 	   // 채팅방 ID를 생성하는 함수
 	   function generateRoomId(sender, receiver) {
-	       return sender < receiver ? sender + '_' + receiver : receiver + '_' + sender;
+	       return sender < receiver ? sender + ',' + receiver : receiver + ',' + sender;
 	   }
 
 	// 채팅 창을 여는 함수

@@ -20,7 +20,7 @@ public class CMyFeedService implements CServiceMInterface {
 
 	private IDao iDao;
 	private final RedisTemplate<String, String> redisTemplate;
-
+	
 	public CMyFeedService(IDao iDao, RedisTemplate<String, String> redisTemplate) {
 		this.iDao = iDao;
 		this.redisTemplate = redisTemplate;
@@ -36,16 +36,16 @@ public class CMyFeedService implements CServiceMInterface {
 
 		String clientIP = getClientIP(request);
 		String todayVisitKey = "visited_" + clientIP + mem_code + "_today"; // 오늘 방문 체크
-		System.out.println("todayVisitKey:" + todayVisitKey);
+		System.out.println("todayVisitKey:" +todayVisitKey);
 
-		// Redis에서 방문 여부 확인
-		if (Boolean.FALSE.equals(redisTemplate.hasKey(todayVisitKey))) {
-			iDao.totalVisits(mem_code);
-			iDao.dailyVisits(mem_code);
-
-			// 방문 기록 Redis에 저장
-			redisTemplate.opsForValue().set(todayVisitKey, "true");
-		}
+		 // Redis에서 방문 여부 확인
+        if (Boolean.FALSE.equals(redisTemplate.hasKey(todayVisitKey))) {
+            iDao.totalVisits(mem_code);
+            iDao.dailyVisits(mem_code);
+            
+            // 방문 기록 Redis에 저장
+            redisTemplate.opsForValue().set(todayVisitKey, "true");
+        }
 
 		MemberLoginDto loginUser = (MemberLoginDto) session.getAttribute("loginUser");
 		if (loginUser != null) {
@@ -86,7 +86,7 @@ public class CMyFeedService implements CServiceMInterface {
 
 	}
 
-	// 클라이언트 IP를 추출하는 메서드
+	
 	private String getClientIP(HttpServletRequest request) {
 	    String clientIP = request.getHeader("X-Forwarded-For");
 
@@ -104,12 +104,6 @@ public class CMyFeedService implements CServiceMInterface {
 	    // X-Forwarded-For 헤더에 여러 IP가 있을 경우 첫 번째 IP가 실제 클라이언트 IP입니다.
 	    if (clientIP != null && clientIP.contains(",")) {
 	        clientIP = clientIP.split(",")[0];
-	    }
-
-	    // IPv6 주소인 경우 이를 IPv4 주소로 변환하는 추가 로직을 삽입할 수 있습니다
-	    if (clientIP.contains(":") && !clientIP.equals("0:0:0:0:0:0:0:1")) {
-	        // 예시: IPv6 주소를 내부 네트워크 주소로 간주하고 다른 처리
-	        System.out.println("IPv6 주소가 감지되었습니다: " + clientIP);
 	    }
 
 	    return clientIP;
