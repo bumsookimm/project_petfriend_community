@@ -571,7 +571,6 @@
 
 	<select id="getChatRooms"
 		resultType="com.tech.petfriends.community.dto.CChatDto">
-
 		SELECT ROOM_ID, SENDER, RECEIVER
 	    FROM COMMUNITY_CHAT_ROOM
 	    WHERE ROOM_ID LIKE '%' || #{sender} || '%'
