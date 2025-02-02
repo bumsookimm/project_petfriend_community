@@ -11,13 +11,54 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/static/js/community/community_main.js"></script>
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
 <link rel="stylesheet" href="/static/css/community/community_main.css">
 <jsp:include page="/WEB-INF/views/include_jsp/include_css_js.jsp" />
+
+<script>
+   const socket = io('http://localhost:3000'); // 서버와 연결
+
+   socket.on('connect', () => {
+     console.log('서버와의 연결 성공');
+   });
+
+   socket.on('disconnect', () => {
+     console.log('서버와의 연결이 끊어졌습니다.');
+   });
+   
+   // 서버에서 유저 목록 업데이트 받기
+   socket.on('updateUsers', (users) => {
+     console.log('활성 사용자 목록:', users);
+     // 사용자 목록을 UI에 업데이트 (예: ul에 리스트 추가)
+   });
+
+   // 서버에서 메시지 받기
+   socket.on('newMessage', (messageData) => {
+     const { sender, message } = messageData;
+     console.log(`${sender}: ${message}`);
+     // UI에 메시지 표시 (예: div에 메시지 추가)
+   });
+
+   // 전체채팅 버튼 클릭 시 채팅방 참여
+   function joinChat() {
+     socket.emit('joinChat');
+   }
+
+   // 메시지 전송
+   function sendMessage() {
+     const message = document.getElementById('messageInput').value;
+     const sender = '로그인된 사용자'; // 실제 로그인된 사용자명으로 대체
+     socket.emit('sendMessage', { sender, message });
+   }
+ </script>
+
+
 </head>
 
 <body>
 
 
+	
 	<!-- 내 이웃 목록 모달 -->
 	<div id="myNeighborListModal" class="modal">
 		<div class="modal-content">
@@ -51,6 +92,12 @@
 					</c:forEach>
 				</ul>
 			</section>
+
+			<button onclick="joinChat()">전체 채팅 방 참여</button>
+			 <div id="chatMessages"></div>
+			 <input id="messageInput" type="text" placeholder="메시지를 입력하세요">
+			 <button onclick="sendMessage()">메시지 전송</button>
+
 
 
 			<!-- 펫프렌즈는 지금 뭐할까? -->
@@ -151,6 +198,7 @@
 			</section>
 		</div>
 		<!-- 사이드바 -->
+
 
 
 		<div class="sidebar">

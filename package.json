@@ -1,0 +1,30 @@
+{
+  "name": "bum_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bumsookimm/project_petfriend_community.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bumsookimm/project_petfriend_community/issues"
+  },
+  "homepage": "https://github.com/bumsookimm/project_petfriend_community#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "oracledb": "^6.7.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/oracledb": "^6.5.3"
+  }
+}
