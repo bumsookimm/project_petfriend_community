@@ -16,41 +16,89 @@
 <jsp:include page="/WEB-INF/views/include_jsp/include_css_js.jsp" />
 
 <script>
-   const socket = io('http://localhost:3000'); // 서버와 연결
+  const socket = io("http://localhost:3004"); // 서버 주소
 
-   socket.on('connect', () => {
-     console.log('서버와의 연결 성공');
-   });
+  // 서버와 연결되면
+  socket.on("connect", () => {
+    console.log("✅ 서버와 연결됨!");
+  });
 
-   socket.on('disconnect', () => {
-     console.log('서버와의 연결이 끊어졌습니다.');
-   });
-   
-   // 서버에서 유저 목록 업데이트 받기
-   socket.on('updateUsers', (users) => {
-     console.log('활성 사용자 목록:', users);
-     // 사용자 목록을 UI에 업데이트 (예: ul에 리스트 추가)
-   });
+  // 서버 연결 끊어졌을 때
+  socket.on("disconnect", () => {
+    console.log("서버와의 연결이 끊어졌습니다.");
+  });
 
-   // 서버에서 메시지 받기
-   socket.on('newMessage', (messageData) => {
-     const { sender, message } = messageData;
-     console.log(`${sender}: ${message}`);
-     // UI에 메시지 표시 (예: div에 메시지 추가)
-   });
+  // 활성 사용자 목록 갱신
+  socket.on('updateUsers', (users) => {
+    console.log('활성 사용자 목록:', users);
+  });
 
-   // 전체채팅 버튼 클릭 시 채팅방 참여
-   function joinChat() {
-     socket.emit('joinChat');
-   }
+  // 새로운 메시지 받기
+  socket.on('newMessage', (messageData) => {
+    const { sender, message, isSender } = messageData; 
+    const chatMessages = document.getElementById('chatMessages');
+    const newMessage = document.createElement('div');
+    
+    // 메시지에 오른쪽 또는 왼쪽 정렬 클래스 추가
+    newMessage.classList.add('message');
+    newMessage.classList.add(isSender ? 'right' : 'left'); // isSender가 true이면 오른쪽, 아니면 왼쪽
 
-   // 메시지 전송
+    newMessage.innerHTML = `<strong>\${sender}:</strong> \${message}`;
+    chatMessages.appendChild(newMessage);
+    chatMessages.scrollTop = chatMessages.scrollHeight; // 자동 스크롤
+  });
+
+  // 채팅 방 참여
+  function joinChat() {
+    socket.emit('joinChat');
+
+    // 채팅 UI가 없으면 생성
+    if (!document.getElementById('chatContainer')) {
+      const chatContainer = document.createElement('div');
+      chatContainer.id = 'chatContainer';
+      chatContainer.innerHTML = `
+        <h3>전체 채팅</h3>
+        <div id="chatMessages"></div>
+        <input id="messageInput" type="text" placeholder="메시지를 입력하세요">
+        <button id="sendButton" onclick="sendMessage()">전송</button>
+        <button id="exitButton" onclick="exitChat()">나가기</button>
+      `;
+
+      // 모달 배경 추가
+      const modalBackground = document.createElement('div');
+      modalBackground.id = 'modalBackground'; 
+      modalBackground.onclick = function() {
+        document.body.removeChild(chatContainer);
+        document.body.removeChild(modalBackground);
+      };
+
+      document.body.appendChild(modalBackground);
+      document.body.appendChild(chatContainer);
+    }
+  }
+
+  // 메시지 전송
    function sendMessage() {
-     const message = document.getElementById('messageInput').value;
-     const sender = '로그인된 사용자'; // 실제 로그인된 사용자명으로 대체
-     socket.emit('sendMessage', { sender, message });
+     const messageInput = document.getElementById('messageInput');
+     const message = messageInput.value.trim();
+     if (message !== '') {
+       const sender = '${sessionScope.loginUser.mem_nick}'; // 사용자 닉네임
+       socket.emit('sendMessage', { sender, message, isSender: true }); // isSender를 true로 설정하여 보낸 사람 구분
+       messageInput.value = ''; // 입력란 비우기
+     }
    }
- </script>
+
+	// 나가기 버튼 클릭 시 채팅창 닫기
+	function exitChat() {
+	  const chatContainer = document.getElementById('chatContainer');
+	  const modalBackground = document.getElementById('modalBackground');
+	  document.body.removeChild(chatContainer);
+	  document.body.removeChild(modalBackground);
+	}
+
+
+</script>
+
 
 
 </head>
@@ -93,11 +141,7 @@
 				</ul>
 			</section>
 
-			<button onclick="joinChat()">전체 채팅 방 참여</button>
-			 <div id="chatMessages"></div>
-			 <input id="messageInput" type="text" placeholder="메시지를 입력하세요">
-			 <button onclick="sendMessage()">메시지 전송</button>
-
+			
 
 
 			<!-- 펫프렌즈는 지금 뭐할까? -->
@@ -245,13 +289,15 @@
 							피드</a></li>
 
 					<li><a href="/community/writeView">글쓰기</a></li>
-
+					
 					<li><a href="javascript:void(0);"
 						onclick="fetchUserActivity()">내 소식</a></li>
 					<li><a href="javascript:void(0);" onclick="fetchMyActivity()">내
 							활동</a></li>
 					<a href="javascript:void(0);" onclick="fetchMyNeighborList()">내
 						이웃 목록</a>
+					<li><a href="javascript:void(0);"
+						onclick="joinChat()">전체 채팅</a></li>
 			</ul>
 			<div class="sidebar-notice">
 				<h3>소식상자</h3>
