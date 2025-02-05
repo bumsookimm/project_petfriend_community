@@ -15,31 +15,27 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-	import org.springframework.web.bind.annotation.RequestBody;
-	import org.springframework.web.bind.annotation.RequestMapping;
-	import org.springframework.web.bind.annotation.RequestParam;
-	import org.springframework.web.bind.annotation.ResponseBody;
-	import org.springframework.web.multipart.MultipartHttpServletRequest;
-	
-	import com.tech.petfriends.community.dto.CChatDto;
-	import com.tech.petfriends.community.dto.CCommunityFriendDto;
-	import com.tech.petfriends.community.dto.CDto;
-	import com.tech.petfriends.community.dto.CReportDto;
-	import com.tech.petfriends.community.service.CCommunityServiceGroup;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.tech.petfriends.community.dto.CChatDto;
+import com.tech.petfriends.community.dto.CCommunityFriendDto;
+import com.tech.petfriends.community.dto.CDto;
+import com.tech.petfriends.community.dto.CReportDto;
+import com.tech.petfriends.community.service.CCommunityServiceGroup;
 import com.tech.petfriends.community.service.CDraftService;
 
 import lombok.RequiredArgsConstructor;
-	
-	@Controller
-	@RequestMapping("/community")
-	@RequiredArgsConstructor
-	public class CommunityController {
 
+@Controller
+@RequestMapping("/community")
+@RequiredArgsConstructor
+public class CommunityController {
 
 	private final CCommunityServiceGroup cCommunityServiceGroup;
-
-	
-	private final CDraftService draftService;
 
 	@GetMapping("/main")
 	public String communityMain(HttpSession session, HttpServletRequest request, Model model) {
@@ -59,37 +55,27 @@ import lombok.RequiredArgsConstructor;
 	public String communityWrite(MultipartHttpServletRequest mtfRequest, Model model) {
 
 		cCommunityServiceGroup.loadcommunityWrite(mtfRequest, model);
-		
-		draftService.deleteDraft(mtfRequest.getParameter("mem_code"));
+
 		return "/community/alert";
 
 	}
 
-    @PostMapping("/saveDraft")
-    public ResponseEntity<Void> saveDraft(@RequestParam String mem_code,
-                                          @RequestParam String board_title,
-                                          @RequestParam String board_content) {
-    	
-    	System.out.println("mem_code:"+mem_code);
-    	System.out.println("board_title:"+board_title);
-    	System.out.println("board_content:"+board_content);
-    
-    	draftService.saveOrUpdateDraft(mem_code, board_title, board_content);
-        return ResponseEntity.ok().build();
-    }
+	@PostMapping("/saveDraft")
+	public ResponseEntity<Void> saveDraft(@RequestParam String mem_code, @RequestParam String board_title,
+			@RequestParam String board_content) {
 
-    @GetMapping("/getDraft")
-    public ResponseEntity<CDto> getDraft(@RequestParam String mem_code) {
-        CDto draft = draftService.getDraft(mem_code);
-       
-    	System.out.println("mem_code:"+mem_code);
+		cCommunityServiceGroup.loadsaveDraft(mem_code, board_title, board_content);
+		return ResponseEntity.ok().build();
+	}
 
-        
-        return ResponseEntity.ok(draft);
-    }
-	
-	
-	
+	@GetMapping("/getDraft")
+	public ResponseEntity<CDto> getDraft(@RequestParam String mem_code) {
+
+		cCommunityServiceGroup.loadgetDraft(mem_code);
+		CDto draft = cCommunityServiceGroup.loadgetDraft(mem_code);
+		return ResponseEntity.ok(draft);
+	}
+
 	@GetMapping("/download")
 	public String download(HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 

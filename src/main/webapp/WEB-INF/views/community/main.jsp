@@ -11,13 +11,130 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/static/js/community/community_main.js"></script>
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
 <link rel="stylesheet" href="/static/css/community/community_main.css">
 <jsp:include page="/WEB-INF/views/include_jsp/include_css_js.jsp" />
+
+<script>
+  const socket = io("http://localhost:3004"); // 서버 주소
+
+  // 서버와 연결되면
+  socket.on("connect", () => {
+    console.log("✅ 서버와 연결됨!");
+  });
+
+  // 서버 연결 끊어졌을 때
+  socket.on("disconnect", () => {
+    console.log("서버와의 연결이 끊어졌습니다.");
+  });
+
+  // 활성 사용자 목록 갱신
+  socket.on('updateUsers', (users) => {
+    console.log('활성 사용자 목록:', users);
+  });
+
+  // 새로운 메시지 받기
+  socket.on('newMessage', (messageData) => {
+      const { sender, message } = messageData;
+      const chatMessages = document.getElementById('chatMessages');
+      const newMessage = document.createElement('div');
+      
+      // 사용자 본인 메시지이면 오른쪽 정렬, 다른 사용자의 메시지이면 왼쪽 정렬
+      newMessage.classList.add('message');
+      if (sender === '${sessionScope.loginUser.mem_nick}') {
+          newMessage.classList.add('right'); // 내가 보낸 메시지는 오른쪽 정렬
+      } else {
+          newMessage.classList.add('left'); // 다른 사람이 보낸 메시지는 왼쪽 정렬
+      }
+
+      newMessage.innerHTML = `<strong>\${sender}:</strong> \${message}`;
+      chatMessages.appendChild(newMessage);
+      chatMessages.scrollTop = chatMessages.scrollHeight; // 자동 스크롤
+  });
+
+  // 채팅 방 참여 시 메시지 불러오기
+  function joinChat() {
+      const nickname = '${sessionScope.loginUser.mem_nick}'; // 세션에 저장된 닉네임
+      socket.emit('setNickname', nickname); // 서버에 닉네임 전달
+
+      // 채팅 UI가 없으면 생성
+      if (!document.getElementById('chatContainer')) {
+          const chatContainer = document.createElement('div');
+          chatContainer.id = 'chatContainer';
+          chatContainer.innerHTML = `
+              <h3>전체 채팅</h3>
+              <div id="chatMessages"></div>
+              <input id="messageInput" type="text" placeholder="메시지를 입력하세요">
+              <button id="sendButton" onclick="sendMessage()">전송</button>
+              <button id="exitButton" onclick="exitChat()">나가기</button>
+          `;
+
+          // 모달 배경 추가
+          const modalBackground = document.createElement('div');
+          modalBackground.id = 'modalBackground'; 
+          modalBackground.onclick = function() {
+              document.body.removeChild(chatContainer);
+              document.body.removeChild(modalBackground);
+          };
+
+          document.body.appendChild(modalBackground);
+          document.body.appendChild(chatContainer);
+
+          // 서버에서 이전 메시지 로드
+          socket.emit('getChatHistory');
+      }
+  }
+  // 채팅 히스토리 로드
+  socket.on('loadChatHistory', (chatMessages) => {
+      const chatMessagesContainer = document.getElementById('chatMessages');
+      chatMessages.forEach(messageData => {
+          const { sender, message } = messageData;
+          const newMessage = document.createElement('div');
+          newMessage.classList.add('message');
+
+          // 사용자 본인 메시지이면 오른쪽 정렬, 다른 사용자의 메시지이면 왼쪽 정렬
+          if (sender === '${sessionScope.loginUser.mem_nick}') {
+              newMessage.classList.add('right'); // 내가 보낸 메시지는 오른쪽 정렬
+          } else {
+              newMessage.classList.add('left'); // 다른 사람이 보낸 메시지는 왼쪽 정렬
+          }
+
+          newMessage.innerHTML = `<strong>\${sender}:</strong> \${message}`;
+          chatMessagesContainer.appendChild(newMessage);
+      });
+      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // 자동 스크롤
+  });
+
+  // 메시지 전송
+   function sendMessage() {
+     const messageInput = document.getElementById('messageInput');
+     const message = messageInput.value.trim();
+     if (message !== '') {
+       const sender = '${sessionScope.loginUser.mem_nick}'; // 사용자 닉네임
+       socket.emit('sendMessage', { sender, message }); 
+       messageInput.value = ''; // 입력란 비우기
+     }
+   }
+
+	// 나가기 버튼 클릭 시 채팅창 닫기
+	function exitChat() {
+	  const chatContainer = document.getElementById('chatContainer');
+	  const modalBackground = document.getElementById('modalBackground');
+	  document.body.removeChild(chatContainer);
+	  document.body.removeChild(modalBackground);
+	}
+
+
+</script>
+
+
+
 </head>
 
 <body>
 
 
+	
 	<!-- 내 이웃 목록 모달 -->
 	<div id="myNeighborListModal" class="modal">
 		<div class="modal-content">
@@ -51,6 +168,8 @@
 					</c:forEach>
 				</ul>
 			</section>
+
+			
 
 
 			<!-- 펫프렌즈는 지금 뭐할까? -->
@@ -153,6 +272,7 @@
 		<!-- 사이드바 -->
 
 
+
 		<div class="sidebar">
 			<div class="ad-banner">
 				<a href="http://localhost:9002/notice/eventView?id=49&active=N">
@@ -197,13 +317,15 @@
 							피드</a></li>
 
 					<li><a href="/community/writeView">글쓰기</a></li>
-
+					
 					<li><a href="javascript:void(0);"
 						onclick="fetchUserActivity()">내 소식</a></li>
 					<li><a href="javascript:void(0);" onclick="fetchMyActivity()">내
 							활동</a></li>
 					<a href="javascript:void(0);" onclick="fetchMyNeighborList()">내
 						이웃 목록</a>
+					<li><a href="javascript:void(0);"
+						onclick="joinChat()">전체 채팅</a></li>
 			</ul>
 			<div class="sidebar-notice">
 				<h3>소식상자</h3>

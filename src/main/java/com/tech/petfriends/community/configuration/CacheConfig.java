@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Configuration;
 	@Configuration
 	@EnableCaching
 	public class CacheConfig {
-	
+
 	    @Bean
 	    public CacheManager cacheManager() {
 	        SimpleCacheManager cacheManager = new SimpleCacheManager();
-	        // 캐시 이름 'userStories'를 지정
-	        cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("userStories")));
+	        // 캐시 이름 'userStories'와 'postlist'를 설정
+	        cacheManager.setCaches(Arrays.asList(new ConcurrentMapCache("userStories"), new ConcurrentMapCache("postlist")));
 	        return cacheManager;
 	    }
 	}

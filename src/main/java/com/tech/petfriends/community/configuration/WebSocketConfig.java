@@ -1,4 +1,4 @@
-package com.tech.petfriends.community.service;
+package com.tech.petfriends.community.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -6,6 +6,8 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 import com.tech.petfriends.community.mapper.IDao;
+import com.tech.petfriends.community.service.CChatService;
+import com.tech.petfriends.community.service.ChatWebSocketHandler;
 
 
 @Configuration
