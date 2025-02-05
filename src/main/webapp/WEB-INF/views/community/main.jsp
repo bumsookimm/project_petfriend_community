@@ -35,47 +35,75 @@
 
   // 새로운 메시지 받기
   socket.on('newMessage', (messageData) => {
-    const { sender, message, isSender } = messageData; 
-    const chatMessages = document.getElementById('chatMessages');
-    const newMessage = document.createElement('div');
-    
-    // 메시지에 오른쪽 또는 왼쪽 정렬 클래스 추가
-    newMessage.classList.add('message');
-    newMessage.classList.add(isSender ? 'right' : 'left'); // isSender가 true이면 오른쪽, 아니면 왼쪽
+      const { sender, message } = messageData;
+      const chatMessages = document.getElementById('chatMessages');
+      const newMessage = document.createElement('div');
+      
+      // 사용자 본인 메시지이면 오른쪽 정렬, 다른 사용자의 메시지이면 왼쪽 정렬
+      newMessage.classList.add('message');
+      if (sender === '${sessionScope.loginUser.mem_nick}') {
+          newMessage.classList.add('right'); // 내가 보낸 메시지는 오른쪽 정렬
+      } else {
+          newMessage.classList.add('left'); // 다른 사람이 보낸 메시지는 왼쪽 정렬
+      }
 
-    newMessage.innerHTML = `<strong>\${sender}:</strong> \${message}`;
-    chatMessages.appendChild(newMessage);
-    chatMessages.scrollTop = chatMessages.scrollHeight; // 자동 스크롤
+      newMessage.innerHTML = `<strong>\${sender}:</strong> \${message}`;
+      chatMessages.appendChild(newMessage);
+      chatMessages.scrollTop = chatMessages.scrollHeight; // 자동 스크롤
   });
 
-  // 채팅 방 참여
+  // 채팅 방 참여 시 메시지 불러오기
   function joinChat() {
-    socket.emit('joinChat');
+      const nickname = '${sessionScope.loginUser.mem_nick}'; // 세션에 저장된 닉네임
+      socket.emit('setNickname', nickname); // 서버에 닉네임 전달
 
-    // 채팅 UI가 없으면 생성
-    if (!document.getElementById('chatContainer')) {
-      const chatContainer = document.createElement('div');
-      chatContainer.id = 'chatContainer';
-      chatContainer.innerHTML = `
-        <h3>전체 채팅</h3>
-        <div id="chatMessages"></div>
-        <input id="messageInput" type="text" placeholder="메시지를 입력하세요">
-        <button id="sendButton" onclick="sendMessage()">전송</button>
-        <button id="exitButton" onclick="exitChat()">나가기</button>
-      `;
+      // 채팅 UI가 없으면 생성
+      if (!document.getElementById('chatContainer')) {
+          const chatContainer = document.createElement('div');
+          chatContainer.id = 'chatContainer';
+          chatContainer.innerHTML = `
+              <h3>전체 채팅</h3>
+              <div id="chatMessages"></div>
+              <input id="messageInput" type="text" placeholder="메시지를 입력하세요">
+              <button id="sendButton" onclick="sendMessage()">전송</button>
+              <button id="exitButton" onclick="exitChat()">나가기</button>
+          `;
 
-      // 모달 배경 추가
-      const modalBackground = document.createElement('div');
-      modalBackground.id = 'modalBackground'; 
-      modalBackground.onclick = function() {
-        document.body.removeChild(chatContainer);
-        document.body.removeChild(modalBackground);
-      };
+          // 모달 배경 추가
+          const modalBackground = document.createElement('div');
+          modalBackground.id = 'modalBackground'; 
+          modalBackground.onclick = function() {
+              document.body.removeChild(chatContainer);
+              document.body.removeChild(modalBackground);
+          };
 
-      document.body.appendChild(modalBackground);
-      document.body.appendChild(chatContainer);
-    }
+          document.body.appendChild(modalBackground);
+          document.body.appendChild(chatContainer);
+
+          // 서버에서 이전 메시지 로드
+          socket.emit('getChatHistory');
+      }
   }
+  // 채팅 히스토리 로드
+  socket.on('loadChatHistory', (chatMessages) => {
+      const chatMessagesContainer = document.getElementById('chatMessages');
+      chatMessages.forEach(messageData => {
+          const { sender, message } = messageData;
+          const newMessage = document.createElement('div');
+          newMessage.classList.add('message');
+
+          // 사용자 본인 메시지이면 오른쪽 정렬, 다른 사용자의 메시지이면 왼쪽 정렬
+          if (sender === '${sessionScope.loginUser.mem_nick}') {
+              newMessage.classList.add('right'); // 내가 보낸 메시지는 오른쪽 정렬
+          } else {
+              newMessage.classList.add('left'); // 다른 사람이 보낸 메시지는 왼쪽 정렬
+          }
+
+          newMessage.innerHTML = `<strong>\${sender}:</strong> \${message}`;
+          chatMessagesContainer.appendChild(newMessage);
+      });
+      chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // 자동 스크롤
+  });
 
   // 메시지 전송
    function sendMessage() {
@@ -83,7 +111,7 @@
      const message = messageInput.value.trim();
      if (message !== '') {
        const sender = '${sessionScope.loginUser.mem_nick}'; // 사용자 닉네임
-       socket.emit('sendMessage', { sender, message, isSender: true }); // isSender를 true로 설정하여 보낸 사람 구분
+       socket.emit('sendMessage', { sender, message }); 
        messageInput.value = ''; // 입력란 비우기
      }
    }
