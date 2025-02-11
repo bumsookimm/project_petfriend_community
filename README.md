@@ -34,7 +34,7 @@
 - **캐시 기능**:사용자 닉네임을 키로 사용하여 스토리 데이터 캐시 기능을 추가
 - **백엔드 로직 처리** - 프론트엔드에서 처리되던 기본 이미지 설정을 서비스 계층에서 처리하여, 프론트엔드에서 불필요한 조건문을 제거하고 데이터 전송량을 감소
 
-![Image](https://github.com/user-attachments/assets/1062c035-5d90-4e68-b6f3-41da9bf3942b)
+![Image](https://github.com/user-attachments/assets/84af0d8f-d073-484d-b684-4cce70c5abbc)
 
 <br>
 
