@@ -12,7 +12,7 @@
 
 - **인원**: 백엔드 5인
 - **기간**: 24. 10. 14 - 24. 11. 21.
-- **주요 기술 스택**: ```Java```, ```Spring MVC```, ```Spring Boot```, ```Oracle```, ```MyBatis```, ```WebSocket```, ```Node.js```,```JavaScript```
+- **주요 기술 스택**: ```Java```, ```Spring MVC```, ```Spring Boot```, ```Oracle```, ```MyBatis```, ```WebSocket```, ```Node.js```, ```JavaScript```
 - **나의 담당 역할**: COMMUNITY
 
    <br>
