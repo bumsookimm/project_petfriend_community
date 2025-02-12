@@ -64,3 +64,12 @@
 - **DB 데이터 활용**: MyBatis + Oracle DB를 사용하여 채팅방, 채팅 메시지를 저장하고 대화 내역을 관리, 실시간으로 메시지를 주고받을 수 있도록 이벤트 기반 메시지 처리
 
 ![Image](https://github.com/user-attachments/assets/0bc6c412-6ae3-4baa-864c-128a78c83f45)
+
+<br>
+
+### [실시간 채팅 1:1]
+
+- **Node.js 활용**: Socket.IO를 활용하여 실시간 전체 채팅 기능 구축
+- **DB 데이터 활용**:JavaScript + Node.js 환경에서 채팅 메시지를 저장하고 대화 내역을 관리
+
+![Image](https://github.com/user-attachments/assets/b0681ed2-7787-4b06-b5a7-7da41b3dcc4b)
