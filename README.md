@@ -41,18 +41,19 @@
 ### [방문자 관리]
 
 - **Redis 활용**: 외부 캐시 저장소(Redis)를 활용하여 동일 IP 중복 카운트 방지
-- **스케줄링 개선** DB 스케줄러 -> 자바 스케줄링으로 매일 자정 방문자 데이터 자동 초기화, 캐시 키 초기화
+- **스케줄링 개선**: DB 스케줄러 -> 자바 스케줄링으로 매일 자정 방문자 데이터 자동 초기화, 캐시 키 초기화
 
 ![Image](https://github.com/user-attachments/assets/6902d0de-4db7-41e6-b421-4be042f519d1)
 
 
 <br>
 
-### [보행 거리 경로]
+### [활동 로그, 내피드, 이웃]
 
-- **APi 활용**: 출발지, 도착지 좌표 변환 및 Tmap API 요청, 응답 데이터를 기반으로 Kakao Maps Polyline을 생성하여 경로 시각화 및 시간 및 거리 표시
+- **DB 데이터 활용**: 활동 관련 테이블 데이터 저장 -> 해당 데이터 활동 로그에 노출, 회원가입 시 각자의 고유 내 피드 생성 -> 내 피드 테이블에 데이터 저장 및 활용
 
-![Image](https://github.com/user-attachments/assets/49d43d0d-96da-4471-abe7-2e7f49545adf)
+
+![Image](https://github.com/user-attachments/assets/57a39bac-bca8-4f69-86f5-9903bb6d1e1d)
 
 
 <br>
