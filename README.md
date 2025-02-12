@@ -52,7 +52,6 @@
 
 - **DB 데이터 활용**: 활동 테이블에 활동 관련 데이터 저장 -> 해당 데이터 활동 로그에 노출, 회원가입 시 각자의 고유 내 피드 생성 -> 내 피드 테이블에 데이터 저장 및 활용
 
-
 ![Image](https://github.com/user-attachments/assets/57a39bac-bca8-4f69-86f5-9903bb6d1e1d)
 
 
@@ -67,9 +66,9 @@
 
 <br>
 
-### [실시간 채팅 1:1]
+### [전체 채팅]
 
 - **Node.js 활용**: Socket.IO를 활용하여 실시간 전체 채팅 기능 구축
-- **DB 데이터 활용**:JavaScript + Node.js 환경에서 채팅 메시지를 저장하고 대화 내역을 관리
+- **DB 데이터 활용**: JavaScript + Node.js 환경에서 채팅 메시지를 DB에 저장하고 대화 내역을 관리
 
 ![Image](https://github.com/user-attachments/assets/b0681ed2-7787-4b06-b5a7-7da41b3dcc4b)
