@@ -38,11 +38,11 @@
 
 <br>
 
-### [실시간 버스 위치 추적]
+### [피드 방문자]
 
 - **APi 활용**: 버스 위치 정보 Open API와 연동하여 실시간 버스 정보를 JSON 형식으로 파싱, 버스 정보를 객체로 변환 하여 실시간 버스 위치, 혼잡도, 위치 정보 등을 제공
 
-![Image](https://github.com/user-attachments/assets/bdf6007b-348e-40fc-bf32-91e902f29577)
+![Image](https://github.com/user-attachments/assets/6902d0de-4db7-41e6-b421-4be042f519d1)
 
 
 <br>
