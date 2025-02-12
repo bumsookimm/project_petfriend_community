@@ -20,7 +20,7 @@ public class CMyFeedService implements CServiceMInterface {
 
 	private IDao iDao;
 	private final RedisTemplate<String, String> redisTemplate;
-	
+
 	public CMyFeedService(IDao iDao, RedisTemplate<String, String> redisTemplate) {
 		this.iDao = iDao;
 		this.redisTemplate = redisTemplate;
@@ -36,16 +36,16 @@ public class CMyFeedService implements CServiceMInterface {
 
 		String clientIP = getClientIP(request);
 		String todayVisitKey = "visited_" + clientIP + mem_code + "_today"; // 오늘 방문 체크
-		System.out.println("todayVisitKey:" +todayVisitKey);
+		System.out.println("todayVisitKey: " + todayVisitKey);
 
-		 // Redis에서 방문 여부 확인
-        if (Boolean.FALSE.equals(redisTemplate.hasKey(todayVisitKey))) {
-            iDao.totalVisits(mem_code);
-            iDao.dailyVisits(mem_code);
-            
-            // 방문 기록 Redis에 저장
-            redisTemplate.opsForValue().set(todayVisitKey, "true");
-        }
+		// Redis에서 방문 여부 확인
+		if (Boolean.FALSE.equals(redisTemplate.hasKey(todayVisitKey))) {
+			iDao.totalVisits(mem_code);
+			iDao.dailyVisits(mem_code);
+
+			// 방문 기록 Redis에 저장
+			redisTemplate.opsForValue().set(todayVisitKey, "true");
+		}
 
 		MemberLoginDto loginUser = (MemberLoginDto) session.getAttribute("loginUser");
 		if (loginUser != null) {
@@ -60,23 +60,18 @@ public class CMyFeedService implements CServiceMInterface {
 		// mem_code를 기반으로 myFeedList 조회
 		ArrayList<CDto> myFeedList = iDao.myFeedList(mem_code); // mem_code를 인자로 넘기기
 		model.addAttribute("myFeedList", myFeedList);
-		System.out.println(mem_code);
 
 		CDto myFeedName = iDao.myFeedName(mem_code);
 		model.addAttribute("myFeedName", myFeedName);
 
 		CDto getpetimg = (CDto) iDao.getPetIMG(mem_code);
 		model.addAttribute("getpetimg", getpetimg);
-		System.out.println("getpetimg:" + getpetimg);
 
 		String friend_mem_nick = myFeedName.getMem_nick();
-		System.out.println("friend_mem_nick:" + friend_mem_nick);
 
 		if (loginUser != null) {
 			String mem_nick = loginUser.getMem_nick();
 			Integer count = iDao.isFriend(mem_nick, friend_mem_nick); // Integer로 받아옴
-
-			System.out.println("count:" + count);
 
 			model.addAttribute("isFriendBool", count);
 		}
@@ -86,26 +81,25 @@ public class CMyFeedService implements CServiceMInterface {
 
 	}
 
-	
 	private String getClientIP(HttpServletRequest request) {
-	    String clientIP = request.getHeader("X-Forwarded-For");
+		String clientIP = request.getHeader("X-Forwarded-For");
 
-	    // X-Forwarded-For에서 실제 클라이언트 IP를 추출
-	    if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
-	        clientIP = request.getHeader("Proxy-Client-IP");
-	    }
-	    if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
-	        clientIP = request.getHeader("WL-Proxy-Client-IP");
-	    }
-	    if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
-	        clientIP = request.getRemoteAddr();
-	    }
+		// X-Forwarded-For에서 실제 클라이언트 IP를 추출
+		if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
+			clientIP = request.getHeader("Proxy-Client-IP");
+		}
+		if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
+			clientIP = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
+			clientIP = request.getRemoteAddr();
+		}
 
-	    // X-Forwarded-For 헤더에 여러 IP가 있을 경우 첫 번째 IP가 실제 클라이언트 IP입니다.
-	    if (clientIP != null && clientIP.contains(",")) {
-	        clientIP = clientIP.split(",")[0];
-	    }
+		// X-Forwarded-For 헤더에 여러 IP가 있을 경우 첫 번째 IP가 실제 클라이언트 IP입니다.
+		if (clientIP != null && clientIP.contains(",")) {
+			clientIP = clientIP.split(",")[0];
+		}
 
-	    return clientIP;
+		return clientIP;
 	}
 }

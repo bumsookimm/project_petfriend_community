@@ -52,11 +52,21 @@ public class CCommunityServiceGroup {
 	private final CDraftService cDraftService;
 
 	public void loadCommunityMain(HttpSession session, HttpServletRequest request, Model model) {
-		model.addAttribute("session", session);
-		model.addAttribute("request", request);
+	    model.addAttribute("session", session);
+	    model.addAttribute("request", request);
 
-		cPostListService.execute(model);
-		cStoryListService.storyListExecute(model, session);
+	    cPostListService.execute(model);
+
+	    // 로그인 유저 가져오기
+	    MemberLoginDto loginUser = (MemberLoginDto) session.getAttribute("loginUser");
+
+	    if (loginUser != null) {
+	        // 캐시 또는 DB에서 데이터 가져오기
+	        ArrayList<CDto> storyList = cStoryListService.storyListExecute(loginUser);
+
+	        // 모델에 storyList 추가
+	        model.addAttribute("storyList", storyList);
+	    }
 	}
 
 	public void loadwriteView(HttpSession session, HttpServletRequest request, Model model) {
