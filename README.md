@@ -58,9 +58,9 @@
 
 <br>
 
-### [시간별 승차 시각화]
+### [실시간 채팅 1:1]
 
-- **DB 데이터 활용**: 시간별 승하차 데이터 DB에 저장 -> 저장된 데이터를 기반으로 정류장 승하차 데이터 전달
-- **차트 생성 및 업데이트**: DB에서 받은 데이터를 Chart.js를 활용히여 시각화
+- **WebSocket 활용**: WebSocket 핸들러를 활용하여 연결 및 메시지 처리, WebSocket을 통해 클라이언트와 실시간 연결을 유지하고 메시지를 전달
+- **DB 데이터 활용**: MyBatis + Oracle DB를 사용하여 채팅방, 채팅 메시지를 저장하고 대화 내역을 관리, 실시간으로 메시지를 주고받을 수 있도록 이벤트 기반 메시지 처리
 
-![Image](https://github.com/user-attachments/assets/7820eaf1-d652-4a3d-b558-904bf616ff6b)
+![Image](https://github.com/user-attachments/assets/0bc6c412-6ae3-4baa-864c-128a78c83f45)
