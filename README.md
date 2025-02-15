@@ -1,6 +1,8 @@
 # 펫프렌즈 : 모바일 기반의 펫프렌즈를 PC 환경으로 확장
 - **블로그**: https://bumdeveloper.tistory.com/
 
+<br>
+
 #### [프로젝트 목표]
 
 - **모바일 전용 플랫폼인 "펫프렌즈"를 PC 환경에 최적화된 형태로 구현하는 것을 목표**
@@ -16,7 +18,7 @@
 - **주요 기술 스택**: ```Java```, ```Spring MVC```, ```Spring Boot```, ```Oracle```, ```MyBatis```, ```WebSocket```, ```Node.js```, ```JavaScript```
 - **나의 담당 역할**: COMMUNITY
 
-   <br>
+<br>
 
 ### [게시글 작성 및 리스트] 
 
