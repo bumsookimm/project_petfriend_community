@@ -1,4 +1,5 @@
 # 펫프렌즈 : 모바일 기반의 펫프렌즈를 PC 환경으로 확장
+**블로그**: https://bumdeveloper.tistory.com/category/%ED%8C%80%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8/%ED%8E%AB%ED%94%84%EB%A0%8C%EC%A6%88
 
 #### [프로젝트 목표]
 
