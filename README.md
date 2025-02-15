@@ -1,5 +1,5 @@
 # 펫프렌즈 : 모바일 기반의 펫프렌즈를 PC 환경으로 확장
-- **블로그**: https://bumdeveloper.tistory.com/
+- **블로그**: https://bumdeveloper.tistory.com
 
 <br>
 
